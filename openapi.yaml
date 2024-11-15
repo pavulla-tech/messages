@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: MaaS API
-  description: Messaging platform
+  description: Messaging as a Service API
   version: "1.0"
   contact:
     name: API Support
@@ -384,9 +384,9 @@ paths:
         - providers
   "/v1/providers/{clientIdentifier}/ping":
     get:
-      summary: Ping client
-      description: Checks if a client is reachable
-      operationId: ping
+      summary: Ping a provider
+      description: Checks if a provider is reachable
+      operationId: pingProvider
       responses:
         "200":
           description: A successful response.
@@ -901,39 +901,6 @@ paths:
         required: true
       tags:
         - verifications
-  "/v1/verifications/{verification_id}/confirm":
-    post:
-      summary: Confirm verification
-      description: Confirms an existing verification
-      operationId: confirmVerification
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Verification"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: verification_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ConfirmVerificationBody"
-        required: true
-      tags:
-        - verifications
   "/v1/verifications/{verification_id}/validate":
     post:
       summary: Validate verification
@@ -1382,11 +1349,6 @@ components:
         mask:
           type: string
           title: e.g., 3-3-3
-    ConfirmVerificationBody:
-      type: object
-      properties:
-        code:
-          type: string
     Connector:
       type: object
       properties:
