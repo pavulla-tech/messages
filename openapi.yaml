@@ -1,0 +1,2082 @@
+openapi: 3.0.0
+info:
+  title: MaaS API
+  description: Messaging platform
+  version: "1.0"
+  contact:
+    name: API Support
+    url: https://github.com/edsonmichaque/katembe
+paths:
+  /v1/connectors:
+    get:
+      summary: List connectors
+      description: Retrieves all available connectors
+      operationId: listConnectors
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListConnectorsResult"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - connectors
+  "/v1/connectors/{connector_id}":
+    get:
+      summary: Get connector
+      description: Retrieves details about a specific connector
+      operationId: getConnector
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connector"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: connector_id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - connectors
+  "/v1/connectors/{connector_id}/disable":
+    post:
+      summary: Disable connector
+      description: Disables a connector
+      operationId: disableConnector
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connector"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: connector_id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - connectors
+  "/v1/connectors/{connector_id}/enable":
+    post:
+      summary: Enable connector
+      description: Enables a connector
+      operationId: enableConnector
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Connector"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: connector_id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - connectors
+  /v1/messages:
+    get:
+      summary: List messages
+      description: Retrieves messages with optional filtering
+      operationId: listMessages
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListMessagesResult"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: clientId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: int64
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: perPage
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - messages
+    post:
+      summary: Create message
+      description: Creates a new message without sending it
+      operationId: createMessage
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMessageRequest"
+        required: true
+      tags:
+        - messages
+  "/v1/messages/{id}":
+    get:
+      summary: Get message
+      description: Retrieves a message by ID
+      operationId: getMessage
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - messages
+  "/v1/messages/{messageId}/cancel":
+    post:
+      summary: Cancel message
+      description: Cancels a pending message
+      operationId: cancelMessage
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+        - name: reason
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - messages
+  "/v1/messages/{messageId}/receipts":
+    get:
+      summary: Get message receipts
+      description: Retrieves delivery receipts for a message
+      operationId: getMessageReceipts
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageReceipt"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - messages
+  "/v1/messages/{messageId}/send":
+    post:
+      summary: Send message
+      description: Sends a previously created message
+      operationId: triggerMessage
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uint64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TriggerMessageBody"
+        required: true
+      tags:
+        - messages
+  /v1/providers:
+    get:
+      summary: List clients
+      description: Retrieves all clients with optional filtering
+      operationId: listProviders
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListProvidersResult"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: tags
+          description: Optional filtering parameters
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: perPage
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: scope
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: accountId
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - providers
+    post:
+      summary: Create new client
+      description: Creates a new client connection with the specified parameters
+      operationId: createProvider
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Provider"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProviderRequest"
+        required: true
+      tags:
+        - providers
+  "/v1/providers/{clientIdentifier}/ping":
+    get:
+      summary: Ping client
+      description: Checks if a client is reachable
+      operationId: ping
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PingResult"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: clientIdentifier
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - providers
+  "/v1/providers/{providerId}":
+    delete:
+      summary: Delete client
+      description: Removes a client configuration
+      operationId: deleteProvider
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomEmpty"
+        "204":
+          description: Provider successfully deleted
+          content:
+            application/json:
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: providerId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - providers
+  "/v1/providers/{provider_id}":
+    get:
+      summary: Get client details
+      description: Retrieves details for a specific client
+      operationId: getProvider
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Provider"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: provider_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - providers
+    put:
+      summary: Update client
+      description: Modifies an existing client's configuration
+      operationId: updateProvider
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Provider"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: provider_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProviderBody"
+        required: true
+      tags:
+        - providers
+  "/v1/providers/{provider_id}/configs":
+    get:
+      summary: List provider configurations
+      description: Lists all configurations for a provider
+      operationId: listProviderConfigs
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListProviderConfigsResult"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: provider_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - providers
+    post:
+      summary: Create provider configuration
+      description: Creates a new configuration for a provider
+      operationId: createProviderConfig
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProviderConfig"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: provider_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProviderConfigBody"
+        required: true
+      tags:
+        - providers
+  "/v1/providers/{provider_id}/configs/{config_id}":
+    get:
+      summary: Get provider configuration
+      description: Gets a specific configuration for a provider
+      operationId: getProviderConfig
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProviderConfig"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: provider_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+        - name: config_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - providers
+    delete:
+      summary: Delete provider configuration
+      description: Deletes a specific configuration for a provider
+      operationId: deleteProviderConfig
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomEmpty"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: provider_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+        - name: config_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - providers
+    put:
+      summary: Update provider configuration
+      description: Updates a specific configuration for a provider
+      operationId: updateProviderConfig
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProviderConfig"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: provider_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+        - name: config_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProviderConfigBody"
+        required: true
+      tags:
+        - providers
+  /v1/tokens:
+    get:
+      summary: List personal access tokens
+      description: Lists all Tokens for the authenticated user
+      operationId: listTokens
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListTokensResult"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - tokens
+    post:
+      summary: Create personal access token
+      description: Generates a new personal access token
+      operationId: createToken
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTokenRequest"
+        required: true
+      tags:
+        - tokens
+  "/v1/tokens/{id}":
+    delete:
+      summary: Revoke personal access token
+      description: Revokes a specific Token
+      operationId: revokeToken
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - tokens
+  /v1/users:
+    post:
+      summary: Create user
+      description: Creates a new user account
+      operationId: createUser
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+        required: true
+      tags:
+        - users
+  "/v1/users/{userId}":
+    get:
+      summary: Get user
+      description: Retrieves user details
+      operationId: getUser
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - users
+    delete:
+      summary: Delete user
+      description: Removes a user account
+      operationId: deleteUser
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomEmpty"
+        "204":
+          description: User successfully deleted
+          content:
+            application/json:
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - users
+  "/v1/users/{user_id}":
+    put:
+      summary: Update user
+      description: Modifies user details
+      operationId: updateUser
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserBody"
+        required: true
+      tags:
+        - users
+  /v1/verifications:
+    post:
+      summary: Create verification
+      description: Creates a new verification
+      operationId: createVerification
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Verification"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateVerificationRequest"
+        required: true
+      tags:
+        - verifications
+  "/v1/verifications/{verification_id}/confirm":
+    post:
+      summary: Confirm verification
+      description: Confirms an existing verification
+      operationId: confirmVerification
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Verification"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: verification_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfirmVerificationBody"
+        required: true
+      tags:
+        - verifications
+  "/v1/verifications/{verification_id}/validate":
+    post:
+      summary: Validate verification
+      description: Validates an existing verification
+      operationId: validateVerification
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Verification"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: verification_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidateVerificationBody"
+        required: true
+      tags:
+        - verifications
+  /v1/webhooks:
+    get:
+      summary: List webhooks
+      description: Retrieves all webhooks for an account
+      operationId: listWebhooks
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListWebhooksResult"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - webhooks
+    post:
+      summary: Create webhook
+      description: Creates a new webhook endpoint
+      operationId: createWebhook
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Webhook"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWebhookRequest"
+        required: true
+      tags:
+        - webhooks
+  "/v1/webhooks/{webhookId}":
+    get:
+      summary: Get webhook
+      description: Retrieves webhook details
+      operationId: getWebhook
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Webhook"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - webhooks
+    delete:
+      summary: Delete webhook
+      description: Removes a webhook
+      operationId: deleteWebhook
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomEmpty"
+        "204":
+          description: Webhook successfully deleted
+          content:
+            application/json:
+              schema: {}
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - webhooks
+  "/v1/webhooks/{webhook_id}":
+    put:
+      summary: Update webhook
+      description: Modifies webhook configuration
+      operationId: updateWebhook
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Webhook"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateWebhookBody"
+        required: true
+      tags:
+        - webhooks
+  "/v1/webhooks/{webhook_id}/deliveries":
+    get:
+      summary: List webhook deliveries
+      description: Retrieves delivery history for a webhook
+      operationId: listWebhookDeliveries
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListWebhookDeliveriesResult"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - webhooks
+  "/v1/webhooks/{webhook_id}/deliveries/{delivery_id}":
+    get:
+      summary: Get webhook delivery
+      description: Gets details of a specific webhook delivery attempt
+      operationId: getWebhookDelivery
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookDelivery"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+        - name: delivery_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      tags:
+        - webhooks
+  "/v1/webhooks/{webhook_id}/deliveries/{delivery_id}/retry":
+    post:
+      summary: Retry webhook delivery
+      description: Retries a failed webhook delivery
+      operationId: retryWebhookDelivery
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookDelivery"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+        - name: delivery_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RetryWebhookDeliveryBody"
+        required: true
+      tags:
+        - webhooks
+  "/v1/webhooks/{webhook_id}/disable":
+    post:
+      summary: Disable webhook
+      description: Disables a webhook
+      operationId: disableWebhook
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomEmpty"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DisableWebhookBody"
+        required: true
+      tags:
+        - webhooks
+  "/v1/webhooks/{webhook_id}/enable":
+    post:
+      summary: Enable webhook
+      description: Enables a webhook
+      operationId: enableWebhook
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Webhook"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnableWebhookBody"
+        required: true
+      tags:
+        - webhooks
+  "/v1/webhooks/{webhook_id}/rotate-keys":
+    post:
+      summary: Rotate webhook keys
+      description: Rotates the signing keys for a webhook
+      operationId: rotateWebhookKeys
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Webhook"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RotateWebhookKeysBody"
+        required: true
+      tags:
+        - webhooks
+  "/v1/webhooks/{webhook_id}/test":
+    post:
+      summary: Test webhook
+      description: Sends a test payload to the webhook endpoint
+      operationId: testWebhook
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookDelivery"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TestWebhookBody"
+        required: true
+      tags:
+        - webhooks
+components:
+  schemas:
+    Any:
+      type: object
+      properties:
+        "@type":
+          type: string
+      additionalProperties: {}
+    Code:
+      type: object
+      properties:
+        format:
+          type: string
+          title: e.g., numeric, alphanumeric
+        length:
+          type: integer
+          format: int32
+        expiration:
+          type: string
+          format: int64
+          title: in seconds
+        mask:
+          type: string
+          title: e.g., 3-3-3
+    ConfirmVerificationBody:
+      type: object
+      properties:
+        code:
+          type: string
+    Connector:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uint64
+          title: Unique identifier for the connector (e.g., "smpp", "kannel",
+            "messagebird")
+        platform:
+          type: string
+          title: Platform of the connector (e.g., "smpp", "kannel", "messagebird")
+        name:
+          type: string
+          title: Display name of the connector (e.g., "SMPP Connector", "Kannel Gateway")
+        requirements:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConnectorConfigItem"
+          title: Required fields that must be provided in Provider settings
+        enabled:
+          type: boolean
+          title: Whether the connector is enabled globally
+        created_at:
+          type: string
+          format: int64
+          title: Creation timestamp
+        updated_at:
+          type: string
+          format: int64
+          title: Last update timestamp
+        version:
+          type: string
+      title: Add message definitions for connector operations
+      required:
+        - id
+        - platform
+        - name
+        - requirements
+        - enabled
+        - version
+    ConnectorConfigItem:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name of the configuration item
+        description:
+          type: string
+          title: Description of what this field is for
+        optional:
+          type: boolean
+          title: Whether this field is optional
+        examples:
+          type: array
+          items:
+            type: string
+          title: Example values for this configuration item
+        sensitive:
+          type: boolean
+          title: Whether this field contains sensitive information
+        key:
+          type: string
+          title: Configuration key identifier
+    CreateMessageRequest:
+      type: object
+      properties:
+        body:
+          type: string
+        to:
+          type: string
+        from:
+          type: string
+        platform:
+          type: string
+        provider_id:
+          type: string
+          format: uint64
+    CreateProviderConfigBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        settings:
+          type: object
+          additionalProperties:
+            type: string
+        is_active:
+          type: boolean
+    CreateProviderRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name of the provider
+        connector_id:
+          type: string
+          format: uint64
+          title: ID of the connector to use
+        platform:
+          type: string
+          title: Platform of the provider
+        configs:
+          type: object
+          additionalProperties:
+            type: string
+          title: Provider settings key-value pairs
+        supported_countries:
+          type: array
+          items:
+            type: string
+        default_country:
+          type: string
+    CreateTokenRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+        expires_at:
+          type: string
+          format: int64
+    CreateUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    CreateVerificationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        phone:
+          type: string
+        platform:
+          type: string
+          title: e.g., sms, email, whatsapp
+        issuer:
+          type: string
+          title: e.g., auth, mfa
+        template:
+          type: string
+          title: Template for the message
+        template_id:
+          type: string
+          title: ID of the template
+        code:
+          $ref: "#/components/schemas/Code"
+        provider_id:
+          type: string
+          format: uint64
+      title: Define messages for Verifications operations
+    CreateWebhookRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        content_type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        tls:
+          type: boolean
+        tls_cert:
+          type: string
+        tls_key:
+          type: string
+        tls_ca_cert:
+          type: string
+        mtls:
+          type: boolean
+        signing_algorithm:
+          type: string
+    CustomEmpty:
+      type: object
+    DisableWebhookBody:
+      type: object
+    EnableWebhookBody:
+      type: object
+    ListConnectorsResult:
+      type: object
+      properties:
+        connectors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Connector"
+        page:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_items:
+          type: integer
+          format: int32
+    ListMessagesResult:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+        page:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_items:
+          type: integer
+          format: int32
+    ListProviderConfigsResult:
+      type: object
+      properties:
+        configs:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProviderConfig"
+        page:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_items:
+          type: integer
+          format: int32
+    ListProvidersResult:
+      type: object
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Provider"
+        page:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_items:
+          type: integer
+          format: int32
+    ListTokensResult:
+      type: object
+      properties:
+        tokens:
+          type: array
+          items:
+            $ref: "#/components/schemas/Token"
+        page:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_items:
+          type: integer
+          format: int32
+    ListWebhookDeliveriesResult:
+      type: object
+      properties:
+        deliveries:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebhookDelivery"
+        page:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_items:
+          type: integer
+          format: int32
+    ListWebhooksResult:
+      type: object
+      properties:
+        webhooks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Webhook"
+        page:
+          type: integer
+          format: int32
+        total_pages:
+          type: integer
+          format: int32
+        total_items:
+          type: integer
+          format: int32
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uint64
+        platform:
+          type: string
+        account_id:
+          type: string
+          format: uint64
+        user_id:
+          type: string
+          format: uint64
+        body:
+          type: string
+        to:
+          type: string
+        from:
+          type: string
+        status:
+          type: string
+        callback_url:
+          type: string
+        created_at:
+          type: string
+          format: int64
+        updated_at:
+          type: string
+          format: int64
+        provider_id:
+          type: string
+          format: int64
+    MessageReceipt:
+      type: object
+      properties:
+        id:
+          type: string
+        message_id:
+          type: string
+        recipient:
+          type: string
+        status:
+          type: string
+        error_message:
+          type: string
+        delivered_at:
+          type: string
+          format: int64
+        created_at:
+          type: string
+          format: int64
+    PingResult:
+      type: object
+      properties:
+        reachable:
+          type: boolean
+        status:
+          type: string
+        latency_ms:
+          type: string
+          format: int64
+    Provider:
+      type: object
+      properties:
+        id:
+          type: string
+          format: int64
+        platform:
+          type: string
+        account_id:
+          type: string
+          format: int64
+        name:
+          type: string
+        host:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: int64
+        updated_at:
+          type: string
+          format: int64
+        configs:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProviderConfig"
+    ProviderConfig:
+      type: object
+      properties:
+        id:
+          type: string
+          format: int64
+        provider_id:
+          type: string
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        settings:
+          type: object
+          additionalProperties:
+            type: string
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: int64
+        updated_at:
+          type: string
+          format: int64
+    RetryWebhookDeliveryBody:
+      type: object
+    RotateWebhookKeysBody:
+      type: object
+    Status:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            $ref: "#/components/schemas/Any"
+    TestWebhookBody:
+      type: object
+      properties:
+        payload:
+          type: string
+    Token:
+      type: object
+      properties:
+        id:
+          type: string
+          format: int64
+        name:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: int64
+        updated_at:
+          type: string
+          format: int64
+        expires_at:
+          type: string
+          format: int64
+        last_used_at:
+          type: string
+          format: int64
+        token:
+          type: string
+    TriggerMessageBody:
+      type: object
+      properties:
+        platform:
+          type: string
+        provider_id:
+          type: string
+          format: uint64
+    UpdateProviderBody:
+      type: object
+      properties:
+        config:
+          $ref: "#/components/schemas/ProviderConfig"
+        tags:
+          type: array
+          items:
+            type: string
+    UpdateProviderConfigBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        settings:
+          type: object
+          additionalProperties:
+            type: string
+        is_active:
+          type: boolean
+    UpdateUserBody:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    UpdateWebhookBody:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        content_type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        active:
+          type: boolean
+        tls_verification:
+          type: boolean
+        tls_cert:
+          type: string
+        tls_key:
+          type: string
+        tls_ca_cert:
+          type: string
+        mtls_enabled:
+          type: boolean
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: int64
+        account_id:
+          type: string
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        created_at:
+          type: string
+          format: int64
+        updated_at:
+          type: string
+          format: int64
+    ValidateVerificationBody:
+      type: object
+      properties:
+        code:
+          type: string
+    Verification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uint64
+        uid:
+          type: string
+        platform:
+          type: string
+          title: e.g., phone, email, whatsapp
+        status:
+          type: string
+          title: e.g., pending, confirmed
+        created_at:
+          type: string
+          format: int64
+        updated_at:
+          type: string
+          format: int64
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: int64
+        account_id:
+          type: string
+          format: int64
+        name:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        content_type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        headers:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebhookHeader"
+        active:
+          type: boolean
+        tls_verification:
+          type: boolean
+        tls_cert:
+          type: string
+        tls_key:
+          type: string
+        tls_ca_cert:
+          type: string
+        mtls_enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: int64
+        updated_at:
+          type: string
+          format: int64
+        signing_algorithm:
+          type: string
+      title: Add message definitions for webhook operations
+    WebhookDelivery:
+      type: object
+      properties:
+        id:
+          type: string
+          format: int64
+        webhook_id:
+          type: string
+          format: int64
+        event_id:
+          type: string
+          format: int64
+        account_id:
+          type: string
+          format: int64
+        event_type:
+          type: string
+        status:
+          type: integer
+          format: int32
+        request_body:
+          type: string
+        response_body:
+          type: string
+        response_code:
+          type: integer
+          format: int32
+        error:
+          type: string
+        duration:
+          type: string
+          format: int64
+        next_retry_time:
+          type: string
+          format: int64
+        retry_count:
+          type: integer
+          format: int32
+        created_at:
+          type: string
+          format: int64
+        updated_at:
+          type: string
+          format: int64
+    WebhookHeader:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
