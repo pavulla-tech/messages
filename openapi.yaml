@@ -1,50 +1,783 @@
 openapi: 3.0.0
 info:
-  title: MaaS API
-  description: Messaging as a Service API
+  title: Katembe API
+  description: Katembe API provides communication services for sending messages
+    through various providers.
   version: "1.0"
   contact:
-    name: API Support
-    url: https://github.com/edsonmichaque/katembe
+    name: Katembe API Team
+    url: https://github.com/pavulla-tech/katembe-api
+    email: edson@michaque.com
+  license:
+    name: MIT
+    url: https://github.com/pavulla-tech/katembe-api/blob/main/LICENSE
 paths:
+  /v1/admin/stats:
+    get:
+      summary: Get all system statistics
+      description: Get statistics about all system resources and usage
+      operationId: GetStats
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stats"
+      parameters:
+        - name: timeRangeSeconds
+          description: |-
+            Optional time range in seconds (from now)
+
+            Time range in seconds from now
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - Stats
+  /v1/admin/stats/connectors:
+    get:
+      summary: Get connector statistics
+      description: Get statistics about connectors
+      operationId: GetConnectorStats
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConnectorStats"
+      parameters:
+        - name: timeRangeSeconds
+          description: |-
+            Optional time range in seconds (from now)
+
+            Time range in seconds from now
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - Stats
+  /v1/admin/stats/identity-providers:
+    get:
+      summary: Get identity provider statistics
+      description: Get statistics about identity providers
+      operationId: GetIdentityProviderStats
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdentityProviderStats"
+      parameters:
+        - name: timeRangeSeconds
+          description: |-
+            Optional time range in seconds (from now)
+
+            Time range in seconds from now
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - Stats
+  /v1/admin/stats/messages:
+    get:
+      summary: Get message statistics
+      description: Get statistics about messages
+      operationId: GetMessageStats
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageStats"
+      parameters:
+        - name: timeRangeSeconds
+          description: |-
+            Optional time range in seconds (from now)
+
+            Time range in seconds from now
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - Stats
+  /v1/admin/stats/organizations:
+    get:
+      summary: Get organization statistics
+      description: Get statistics about organizations
+      operationId: GetOrganizationStats
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganizationStats"
+      parameters:
+        - name: timeRangeSeconds
+          description: |-
+            Optional time range in seconds (from now)
+
+            Time range in seconds from now
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - Stats
+  /v1/admin/stats/users:
+    get:
+      summary: Get user statistics
+      description: Get statistics about users
+      operationId: GetUserStats
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserStats"
+      parameters:
+        - name: timeRangeSeconds
+          description: |-
+            Optional time range in seconds (from now)
+
+            Time range in seconds from now
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - Stats
+  /v1/admin/stats/webhooks:
+    get:
+      summary: Get webhook statistics
+      description: Get statistics about webhooks
+      operationId: GetWebhookStats
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookStats"
+      parameters:
+        - name: timeRangeSeconds
+          description: |-
+            Optional time range in seconds (from now)
+
+            Time range in seconds from now
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      tags:
+        - Stats
+  /v1/api-keys:
+    get:
+      summary: List API keys
+      description: List API keys with pagination
+      operationId: ListApiKeys
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListApiKeysResponse"
+      parameters:
+        - name: limit
+          description: |-
+            Maximum number of API keys to return
+
+            Maximum number of API keys to return
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: startingAfter
+          description: |-
+            Cursor for pagination (starting after this item)
+
+            Pagination cursor - return items after this ID
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: endingBefore
+          description: |-
+            Cursor for pagination (ending before this item)
+
+            Pagination cursor - return items before this ID
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          description: |-
+            Status of the API keys to filter by
+
+            Status of the API keys to filter by
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - API Keys
+    post:
+      summary: Create API key
+      description: Create a new API key for authentication
+      operationId: CreateApiKey
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiKey"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateApiKeyRequest"
+        description: Request message for creating a new API key
+        required: true
+      tags:
+        - API Keys
+  "/v1/api-keys/{id}":
+    get:
+      summary: Get API key
+      description: Get details of a specific API key
+      operationId: GetApiKey
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiKey"
+      parameters:
+        - name: id
+          description: ID of the API key to retrieve
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - API Keys
+    delete:
+      summary: Revoke API key
+      description: Revoke and delete an API key
+      operationId: RevokeApiKey
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      parameters:
+        - name: id
+          description: ID of the API key to revoke
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - API Keys
+  /v1/authorization/permissions:
+    get:
+      summary: |-
+        List permissions
+        Required permission: "rbac:read"
+      operationId: ListPermissions
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListPermissionsResponse"
+      parameters:
+        - name: limit
+          description: |-
+            Maximum number of items to return
+
+            Maximum number of permissions to return
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: startingAfter
+          description: |-
+            Cursor for pagination (starting after this item)
+
+            Return permissions after this permission ID
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: endingBefore
+          description: |-
+            Cursor for pagination (ending before this item)
+
+            Return permissions before this permission ID
+          in: query
+          required: false
+          schema:
+            type: string
+  /v1/authorization/roles:
+    get:
+      summary: List roles
+      description: Lists all roles with pagination support
+      operationId: ListRoles
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListRolesResponse"
+      parameters:
+        - name: limit
+          description: |-
+            Maximum number of items to return
+
+            Maximum number of roles to return
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: startingAfter
+          description: |-
+            Cursor for pagination (starting after this item)
+
+            Return roles after this role ID
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: endingBefore
+          description: |-
+            Cursor for pagination (ending before this item)
+
+            Return roles before this role ID
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - Authorization
+    post:
+      summary: Create role
+      description: Creates a new role
+      operationId: CreateRole
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateRoleResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRoleRequest"
+        description: Request to create a new role
+        required: true
+      tags:
+        - Authorization
+  "/v1/authorization/roles/{id}":
+    get:
+      summary: |-
+        Get role
+        Required permission: "rbac:read"
+      operationId: GetRole
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetRoleResponse"
+      parameters:
+        - name: id
+          description: Unique identifier for the role
+          in: path
+          required: true
+          schema:
+            type: string
+    delete:
+      summary: |-
+        Delete role
+        Required permission: "rbac:write"
+      operationId: DeleteRole
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteRoleResponse"
+      parameters:
+        - name: id
+          description: Unique identifier for the role
+          in: path
+          required: true
+          schema:
+            type: string
+    put:
+      summary: |-
+        Update role
+        Required permission: "rbac:write"
+      operationId: UpdateRole
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateRoleResponse"
+      parameters:
+        - name: id
+          description: Unique identifier for the role
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRoleBody"
+        required: true
+  "/v1/authorization/roles/{id}/permissions":
+    get:
+      summary: |-
+        List role permissions
+        Required permission: "rbac:read"
+      operationId: ListRolePermissions
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListRolePermissionsResponse"
+      parameters:
+        - name: id
+          description: Unique identifier for the role
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          description: |-
+            Maximum number of items to return
+
+            Maximum number of permissions to return
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: startingAfter
+          description: |-
+            Cursor for pagination (starting after this item)
+
+            Return permissions after this permission ID
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: endingBefore
+          description: |-
+            Cursor for pagination (ending before this item)
+
+            Return permissions before this permission ID
+          in: query
+          required: false
+          schema:
+            type: string
+  "/v1/authorization/roles/{roleId}/permissions":
+    post:
+      summary: |-
+        Add permission to role
+        Required permission: "rbac:write"
+      operationId: AddRolePermission
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddRolePermissionResponse"
+      parameters:
+        - name: roleId
+          description: Unique identifier for the role
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddRolePermissionBody"
+        required: true
+  "/v1/authorization/roles/{roleId}/permissions/{permissionId}":
+    delete:
+      summary: |-
+        Remove permission from role
+        Required permission: "rbac:write"
+      operationId: RemoveRolePermission
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemoveRolePermissionResponse"
+      parameters:
+        - name: roleId
+          description: Unique identifier for the role
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: permissionId
+          description: Unique identifier for the permission to remove
+          in: path
+          required: true
+          schema:
+            type: string
+  /v1/billing/balance:
+    get:
+      summary: Get balance
+      description: Get current balance for an organization
+      operationId: GetBalance
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Balance"
+      tags:
+        - Billing
+  /v1/billing/balance/fund:
+    post:
+      summary: Fund account
+      description: Add funds to an organization's account
+      operationId: FundAccount
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FundAccountRequest"
+        required: true
+      tags:
+        - Billing
+  /v1/billing/transactions:
+    get:
+      summary: List transactions
+      description: List billing transactions with filtering and pagination
+      operationId: ListTransactions
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListTransactionsResponse"
+      parameters:
+        - name: type
+          description: >-
+            Filter by transaction type
+
+            Allows filtering transactions by their type (e.g., payment, refund, etc.)
+
+
+            Filter transactions by type (payment, refund, adjustment, credit, debit, reserve, commit, cancel)
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - payment
+              - refund
+              - adjustment
+              - credit
+              - debit
+              - reserve
+              - commit
+              - cancel
+        - name: status
+          description: |-
+            Filter by transaction status
+            Allows filtering transactions by their current status
+
+            Filter transactions by status (pending, succeeded, failed)
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - pending
+              - succeeded
+              - failed
+        - name: startDate
+          description: |-
+            Filter by start date
+            Include transactions from this date onwards
+
+            Include transactions from this date onwards (RFC3339 format)
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          description: |-
+            Filter by end date
+            Include transactions up to this date
+
+            Include transactions up to this date (RFC3339 format)
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: limit
+          description: |-
+            Maximum number of transactions to return
+            Controls the page size for pagination
+
+            Maximum number of transactions to return (1-100)
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: startingAfter
+          description: |-
+            Token for pagination
+            Return the page of results after this transaction ID
+
+            Return the page of results after this transaction ID
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: endingBefore
+          description: |-
+            Token for pagination
+            Return the page of results before this transaction ID
+
+            Return the page of results before this transaction ID
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - Billing
+  "/v1/billing/transactions/{transactionId}":
+    get:
+      summary: Get transaction
+      description: Get details of a specific transaction
+      operationId: GetTransaction
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+      parameters:
+        - name: transactionId
+          description: Transaction ID to retrieve
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Billing
   /v1/connectors:
     get:
       summary: List connectors
-      description: Retrieves all available connectors
-      operationId: listConnectors
+      description: List available connectors with pagination
+      operationId: ListConnectors
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListConnectorsResult"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/ListConnectorsResponse"
       parameters:
-        - name: per_page
+        - name: limit
+          description: |-
+            Maximum number of connectors to return
+
+            Maximum number of connectors to return in the response (pagination)
           in: query
           required: false
           schema:
             type: integer
             format: int32
-        - name: page
+        - name: startingAfter
+          description: >-
+            Cursor for pagination (starting after this item)
+
+
+            Cursor for pagination: return results starting after this connector ID
           in: query
           required: false
           schema:
-            type: integer
-            format: int32
+            type: string
+        - name: ending_before
+          description: >-
+            Cursor for pagination (ending before this item)
+
+
+            Cursor for pagination: return results ending before this connector ID
+          in: query
+          required: false
+          schema:
+            type: string
       tags:
-        - connectors
-  "/v1/connectors/{connector_id}":
+        - Connectors
+  "/v1/connectors/{id}":
     get:
       summary: Get connector
-      description: Retrieves details about a specific connector
-      operationId: getConnector
+      description: Get details of a specific connector
+      operationId: GetConnector
       responses:
         "200":
           description: A successful response.
@@ -52,120 +785,272 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Connector"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
       parameters:
-        - name: connector_id
+        - name: id
+          description: Unique identifier of the connector to retrieve
           in: path
           required: true
           schema:
             type: string
       tags:
-        - connectors
-  "/v1/connectors/{connector_id}/disable":
+        - Connectors
+  "/v1/invites/{inviteId}/accept":
     post:
-      summary: Disable connector
-      description: Disables a connector
-      operationId: disableConnector
+      summary: Accept invite
+      description: Accept an organization invitation
+      operationId: AcceptInvite
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connector"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/AcceptInviteResponse"
       parameters:
-        - name: connector_id
+        - name: inviteId
+          description: Unique identifier for the invitation
           in: path
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AcceptInviteBody"
+        required: true
       tags:
-        - connectors
-  "/v1/connectors/{connector_id}/enable":
+        - Organizations
+  "/v1/invites/{inviteId}/decline":
     post:
-      summary: Enable connector
-      description: Enables a connector
-      operationId: enableConnector
+      summary: Decline invite
+      description: Decline an organization invitation
+      operationId: DeclineInvite
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connector"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/DeclineInviteResponse"
       parameters:
-        - name: connector_id
+        - name: inviteId
+          description: Unique identifier for the invitation
           in: path
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeclineInviteBody"
+        required: true
       tags:
-        - connectors
+        - Organizations
+  /v1/license:
+    get:
+      summary: Get license information
+      description: Retrieves information about the current system license
+      operationId: GetLicense
+      responses:
+        "200":
+          description: License information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetLicenseResponse"
+        "404":
+          description: No active license found
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - License
+  /v1/license/activate:
+    post:
+      summary: Activate license
+      description: Activates a license using the provided license key
+      operationId: ActivateLicense
+      responses:
+        "200":
+          description: License successfully activated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActivateLicenseResponse"
+        "400":
+          description: Invalid license key
+          content:
+            application/json:
+              schema: {}
+        "409":
+          description: License already activated
+          content:
+            application/json:
+              schema: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ActivateLicenseRequest"
+        required: true
+      tags:
+        - License
+  /v1/license/deactivate:
+    post:
+      summary: Deactivate license
+      description: Deactivates the current system license
+      operationId: DeactivateLicense
+      responses:
+        "200":
+          description: License successfully deactivated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeactivateLicenseResponse"
+        "404":
+          description: No active license found
+          content:
+            application/json:
+              schema: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeactivateLicenseRequest"
+        required: true
+      tags:
+        - License
+  /v1/license/validate:
+    post:
+      summary: Validate license
+      description: Validates a license key without activating it
+      operationId: ValidateLicense
+      responses:
+        "200":
+          description: License validation completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateLicenseResponse"
+        "400":
+          description: Invalid license key
+          content:
+            application/json:
+              schema: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidateLicenseRequest"
+        required: true
+      tags:
+        - License
   /v1/messages:
     get:
       summary: List messages
-      description: Retrieves messages with optional filtering
-      operationId: listMessages
+      description: List messages with filtering and pagination
+      operationId: ListMessages
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListMessagesResult"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/ListMessagesResponse"
       parameters:
-        - name: clientId
+        - name: limit
+          description: >-
+            Maximum number of messages to return
+
+
+            Maximum number of messages to return per page (default: 10, max: 100)
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: starting_after
+          description: |-
+            Cursor for pagination (starting after this item)
+
+            Cursor for pagination: return results after this message ID
           in: query
           required: false
           schema:
             type: string
-            format: int64
+        - name: ending_before
+          description: |-
+            Cursor for pagination (ending before this item)
+
+            Cursor for pagination: return results before this message ID
+          in: query
+          required: false
+          schema:
+            type: string
         - name: status
+          description: |-
+            Filter by message status
+
+            Filter messages by status (e.g., pending, sent, delivered, failed)
           in: query
           required: false
           schema:
             type: string
-        - name: perPage
+        - name: direction
+          description: |-
+            Filter by message direction
+
+            Filter messages by direction (inbound or outbound)
           in: query
           required: false
           schema:
-            type: integer
-            format: int32
-        - name: page
+            type: string
+        - name: sender
+          description: |-
+            Filter by sender ID
+
+            Filter messages by sender ID
           in: query
           required: false
           schema:
-            type: integer
-            format: int32
+            type: string
+        - name: recipient
+          description: |-
+            Filter by recipient
+
+            Filter messages by recipient phone number or identifier
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: start_time
+          description: |-
+            Filter by start time
+
+            Filter messages created after this timestamp
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: end_time
+          description: |-
+            Filter by end time
+
+            Filter messages created before this timestamp
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
       tags:
-        - messages
+        - Messages
     post:
-      summary: Create message
-      description: Creates a new message without sending it
-      operationId: createMessage
+      summary: Send message
+      description: Send a single message
+      operationId: CreateMessage
       responses:
         "200":
           description: A successful response.
@@ -173,194 +1058,560 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Message"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateMessageRequest"
+        description: Request payload for sending a single message
         required: true
       tags:
-        - messages
-  "/v1/messages/{id}":
-    get:
-      summary: Get message
-      description: Retrieves a message by ID
-      operationId: getMessage
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Message"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      tags:
-        - messages
-  "/v1/messages/{messageId}/cancel":
+        - Messages
+  /v1/messages/bulk:
     post:
-      summary: Cancel message
-      description: Cancels a pending message
-      operationId: cancelMessage
+      summary: Send bulk messages
+      description: Send multiple messages in a single request
+      operationId: SendBulkMessages
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Message"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: messageId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-        - name: reason
-          in: query
-          required: false
-          schema:
-            type: string
-      tags:
-        - messages
-  "/v1/messages/{messageId}/receipts":
-    get:
-      summary: Get message receipts
-      description: Retrieves delivery receipts for a message
-      operationId: getMessageReceipts
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/MessageReceipt"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: messageId
-          in: path
-          required: true
-          schema:
-            type: string
-      tags:
-        - messages
-  "/v1/messages/{messageId}/send":
-    post:
-      summary: Send message
-      description: Sends a previously created message
-      operationId: triggerMessage
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Message"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: messageId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uint64
+                $ref: "#/components/schemas/SendBulkMessagesResponse"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TriggerMessageBody"
+              $ref: "#/components/schemas/SendBulkMessagesRequest"
+        description: Request payload for sending multiple messages in a single request
         required: true
       tags:
-        - messages
-  /v1/providers:
+        - Messages
+  "/v1/messages/{id}":
     get:
-      summary: List clients
-      description: Retrieves all clients with optional filtering
-      operationId: listProviders
+      summary: Get message
+      description: Get details of a specific message
+      operationId: GetMessage
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListProvidersResult"
-        default:
-          description: An unexpected error response.
+                $ref: "#/components/schemas/Message"
+      parameters:
+        - name: id
+          description: Message ID to retrieve
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Messages
+  "/v1/messages/{id}/cancel":
+    post:
+      summary: Cancel message
+      description: Cancel a scheduled message
+      operationId: CancelMessage
+      responses:
+        "200":
+          description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Status"
+                type: object
+                properties: {}
       parameters:
-        - name: tags
-          description: Optional filtering parameters
-          in: query
-          required: false
-          explode: true
+        - name: id
+          description: Unique identifier of the message to cancel
+          in: path
+          required: true
           schema:
-            type: array
-            items:
-              type: string
-        - name: perPage
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CancelMessageBody"
+        required: true
+      tags:
+        - Messages
+  "/v1/messages/{id}/confirm":
+    post:
+      summary: Confirm message
+      description: Confirm a scheduled message for sending
+      operationId: ConfirmMessage
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      parameters:
+        - name: id
+          description: Unique identifier of the message to confirm
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfirmMessageBody"
+        required: true
+      tags:
+        - Messages
+  "/v1/messages/{id}/send":
+    post:
+      summary: Send message
+      description: Send a single message
+      operationId: SendMessage
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+      parameters:
+        - name: id
+          description: Unique identifier of the message to send
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMessageBody"
+        required: true
+      tags:
+        - Messages
+  "/v1/messages/{id}/status":
+    get:
+      summary: Get message status
+      description: Get the current status of a message
+      operationId: GetMessageStatus
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+      parameters:
+        - name: id
+          description: Unique identifier of the message to check status for
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Messages
+  /v1/numbers:
+    get:
+      summary: List phone numbers
+      description: Lists all phone numbers with pagination support
+      operationId: ListNumbers
+      responses:
+        "200":
+          description: List of phone numbers retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListNumbersResponse"
+        "400":
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema: {}
+        "403":
+          description: Permission denied
+          content:
+            application/json:
+              schema: {}
+      parameters:
+        - name: limit
+          description: |-
+            Maximum number of items to return
+
+            Maximum number of phone numbers to return
           in: query
           required: false
           schema:
             type: integer
             format: int32
-        - name: page
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: scope
+            default: "10"
+        - name: startingAfter
+          description: |-
+            Cursor for pagination (starting after this item)
+
+            Return phone numbers after this phone number ID
           in: query
           required: false
           schema:
             type: string
-        - name: accountId
+        - name: endingBefore
+          description: |-
+            Cursor for pagination (ending before this item)
+
+            Return phone numbers before this phone number ID
           in: query
           required: false
           schema:
             type: string
       tags:
-        - providers
+        - Phone Numbers
     post:
-      summary: Create new client
-      description: Creates a new client connection with the specified parameters
-      operationId: createProvider
+      summary: Create phone number
+      description: Creates a new phone number
+      operationId: CreateNumber
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateNumberResponse"
+        "201":
+          description: Phone number created successfully
+          content:
+            application/json:
+              schema: {}
+        "400":
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema: {}
+        "403":
+          description: Permission denied
+          content:
+            application/json:
+              schema: {}
+        "409":
+          description: Phone number already exists
+          content:
+            application/json:
+              schema: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNumberRequest"
+        required: true
+      tags:
+        - Phone Numbers
+  "/v1/numbers/{id}":
+    get:
+      summary: Get phone number
+      description: Retrieves a specific phone number by ID
+      operationId: GetNumber
+      responses:
+        "200":
+          description: Phone number retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetNumberResponse"
+        "403":
+          description: Permission denied
+          content:
+            application/json:
+              schema: {}
+        "404":
+          description: Phone number not found
+          content:
+            application/json:
+              schema: {}
+      parameters:
+        - name: id
+          description: Unique identifier for the phone number
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Phone Numbers
+    delete:
+      summary: Delete phone number
+      description: Deletes an existing phone number
+      operationId: DeleteNumber
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteNumberResponse"
+        "204":
+          description: Phone number deleted successfully
+          content:
+            application/json:
+              schema: {}
+        "403":
+          description: Permission denied
+          content:
+            application/json:
+              schema: {}
+        "404":
+          description: Phone number not found
+          content:
+            application/json:
+              schema: {}
+      parameters:
+        - name: id
+          description: Unique identifier for the phone number
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Phone Numbers
+    put:
+      summary: Update phone number
+      description: Updates an existing phone number
+      operationId: UpdateNumber
+      responses:
+        "200":
+          description: Phone number updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateNumberResponse"
+        "400":
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema: {}
+        "403":
+          description: Permission denied
+          content:
+            application/json:
+              schema: {}
+        "404":
+          description: Phone number not found
+          content:
+            application/json:
+              schema: {}
+        "409":
+          description: Phone number already exists
+          content:
+            application/json:
+              schema: {}
+      parameters:
+        - name: id
+          description: Unique identifier for the phone number
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateNumberBody"
+        required: true
+      tags:
+        - Phone Numbers
+  /v1/organizations:
+    get:
+      summary: List organizations
+      description: List organizations with pagination
+      operationId: ListOrganizations
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListOrganizationsResponse"
+      parameters:
+        - name: limit
+          description: Maximum number of organizations to return
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: startingAfter
+          description: Cursor for pagination (starting after this item)
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: endingBefore
+          description: Cursor for pagination (ending before this item)
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - Organizations
+    post:
+      summary: Create organization
+      description: Create a new organization
+      operationId: CreateOrganization
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrganizationRequest"
+        required: true
+      tags:
+        - Organizations
+  "/v1/organizations/{id}":
+    get:
+      summary: Get organization
+      description: Get details of a specific organization
+      operationId: GetOrganization
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+      parameters:
+        - name: id
+          description: Organization ID to retrieve
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Organizations
+    delete:
+      summary: Delete organization
+      description: Delete an organization
+      operationId: DeleteOrganization
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteOrganizationResponse"
+      parameters:
+        - name: id
+          description: Organization ID to delete
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Organizations
+    put:
+      summary: Update organization
+      description: Update an existing organization
+      operationId: UpdateOrganization
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+      parameters:
+        - name: id
+          description: Organization ID to update
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOrganizationBody"
+        required: true
+      tags:
+        - Organizations
+  "/v1/organizations/{organizationId}/invites":
+    post:
+      summary: Invite user
+      description: Invite a user to join an organization
+      operationId: InviteUser
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InviteUserResponse"
+      parameters:
+        - name: organizationId
+          description: Unique identifier for the organization
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InviteUserBody"
+        required: true
+      tags:
+        - Organizations
+  /v1/providers:
+    get:
+      summary: List providers
+      description: List providers with pagination
+      operationId: ListProviders
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListProvidersResponse"
+      parameters:
+        - name: limit
+          description: |-
+            Maximum number of providers to return
+
+            Maximum number of providers to return
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: starting_after
+          description: |-
+            Cursor for pagination (starting after this item)
+
+            Cursor for pagination: return results after this provider ID
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: ending_before
+          description: |-
+            Cursor for pagination (ending before this item)
+
+            Cursor for pagination: return results before this provider ID
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - Providers
+    post:
+      summary: Create provider
+      description: Create a new message provider
+      operationId: CreateProvider
       responses:
         "200":
           description: A successful response.
@@ -368,109 +1619,61 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Provider"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateProviderRequest"
+        description: Request payload for creating a new provider
         required: true
       tags:
-        - providers
-  "/v1/providers/{clientIdentifier}/ping":
+        - Providers
+  "/v1/providers/{id}":
     get:
-      summary: Ping a provider
-      description: Checks if a provider is reachable
-      operationId: pingProvider
+      summary: Get provider
+      description: Get details of a specific provider
+      operationId: GetProvider
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PingResult"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/Provider"
       parameters:
-        - name: clientIdentifier
+        - name: id
+          description: Provider ID to retrieve
           in: path
           required: true
           schema:
             type: string
       tags:
-        - providers
-  "/v1/providers/{providerId}":
+        - Providers
     delete:
-      summary: Delete client
-      description: Removes a client configuration
-      operationId: deleteProvider
+      summary: Delete provider
+      description: Delete a provider
+      operationId: DeleteProvider
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CustomEmpty"
-        "204":
-          description: Provider successfully deleted
-          content:
-            application/json:
-              schema: {}
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                type: object
+                properties: {}
       parameters:
-        - name: providerId
+        - name: id
+          description: Provider ID to delete
           in: path
           required: true
           schema:
             type: string
-            format: int64
       tags:
-        - providers
-  "/v1/providers/{provider_id}":
-    get:
-      summary: Get client details
-      description: Retrieves details for a specific client
-      operationId: getProvider
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Provider"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: provider_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      tags:
-        - providers
+        - Providers
     put:
-      summary: Update client
-      description: Modifies an existing client's configuration
-      operationId: updateProvider
+      summary: Update provider
+      description: Update an existing provider
+      operationId: UpdateProvider
       responses:
         "200":
           description: A successful response.
@@ -478,19 +1681,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Provider"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
       parameters:
-        - name: provider_id
+        - name: id
+          description: Unique identifier of the provider to update
           in: path
           required: true
           schema:
             type: string
-            format: int64
       requestBody:
         content:
           application/json:
@@ -498,375 +1695,454 @@ paths:
               $ref: "#/components/schemas/UpdateProviderBody"
         required: true
       tags:
-        - providers
-  "/v1/providers/{provider_id}/configs":
+        - Providers
+  /v1/settings:
     get:
-      summary: List provider configurations
-      description: Lists all configurations for a provider
-      operationId: listProviderConfigs
+      summary: Get settings
+      operationId: GetSettings
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListProviderConfigsResult"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: provider_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-        - name: per_page
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: page
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-      tags:
-        - providers
-    post:
-      summary: Create provider configuration
-      description: Creates a new configuration for a provider
-      operationId: createProviderConfig
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProviderConfig"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: provider_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateProviderConfigBody"
-        required: true
-      tags:
-        - providers
-  "/v1/providers/{provider_id}/configs/{config_id}":
-    get:
-      summary: Get provider configuration
-      description: Gets a specific configuration for a provider
-      operationId: getProviderConfig
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProviderConfig"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: provider_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-        - name: config_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      tags:
-        - providers
-    delete:
-      summary: Delete provider configuration
-      description: Deletes a specific configuration for a provider
-      operationId: deleteProviderConfig
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CustomEmpty"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: provider_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-        - name: config_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      tags:
-        - providers
+                $ref: "#/components/schemas/Settings"
     put:
-      summary: Update provider configuration
-      description: Updates a specific configuration for a provider
-      operationId: updateProviderConfig
+      summary: Update settings
+      operationId: UpdateSettings
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProviderConfig"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: provider_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-        - name: config_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
+                $ref: "#/components/schemas/Settings"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateProviderConfigBody"
+              $ref: "#/components/schemas/UpdateSettingsRequest"
+        description: Request to update general settings
         required: true
-      tags:
-        - providers
-  /v1/tokens:
+  /v1/settings/organization:
     get:
-      summary: List personal access tokens
-      description: Lists all Tokens for the authenticated user
-      operationId: listTokens
+      summary: Get organization settings
+      operationId: GetOrganizationSettings
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListTokensResult"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: per_page
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: page
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-      tags:
-        - tokens
-    post:
-      summary: Create personal access token
-      description: Generates a new personal access token
-      operationId: createToken
+                $ref: "#/components/schemas/OrganizationSettings"
+    put:
+      summary: Update organization settings
+      operationId: UpdateOrganizationSettings
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Token"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/OrganizationSettings"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateTokenRequest"
+              $ref: "#/components/schemas/UpdateOrganizationSettingsRequest"
         required: true
-      tags:
-        - tokens
-  "/v1/tokens/{id}":
-    delete:
-      summary: Revoke personal access token
-      description: Revokes a specific Token
-      operationId: revokeToken
+  /v1/settings/profile:
+    get:
+      summary: Get user profile settings
+      operationId: GetUserSettings
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Token"
-        default:
-          description: An unexpected error response.
+                $ref: "#/components/schemas/UserSettings"
+    put:
+      summary: Update user profile settings
+      operationId: UpdateUserSettings
+      responses:
+        "200":
+          description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/UserSettings"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserSettingsRequest"
+        required: true
+  /v1/settings/site:
+    get:
+      summary: Get site settings
+      operationId: GetSiteSettings
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteSettings"
+    put:
+      summary: Update site settings
+      operationId: UpdateSiteSettings
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteSettings"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSiteSettingsRequest"
+        required: true
+  /v1/system/identity-providers:
+    get:
+      summary: List identity providers
+      description: List identity providers with filtering and pagination
+      operationId: ListIdentityProviders
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListIdentityProvidersResponse"
+      parameters:
+        - name: limit
+          description: |-
+            Maximum number of identity providers to return
+
+            Maximum number of identity providers to return
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: starting_after
+          description: >-
+            Cursor for pagination (starting after this item)
+
+
+            Pagination cursor to start listing identity providers after this item
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: endingBefore
+          description: |-
+            Cursor for pagination (ending before this item)
+
+            Pagination cursor to end listing identity providers before this item
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: active
+          description: Filter results by active status
+          in: query
+          required: false
+          schema:
+            type: boolean
+      tags:
+        - Identity Providers
+    post:
+      summary: Create identity provider
+      description: Create a new identity provider configuration
+      operationId: CreateIdentityProvider
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdentityProvider"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateIdentityProviderRequest"
+        description: Request payload for creating a new identity provider
+        required: true
+      tags:
+        - Identity Providers
+  "/v1/system/identity-providers/{id}":
+    get:
+      summary: Get identity provider
+      description: Get details of a specific identity provider
+      operationId: GetIdentityProvider
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdentityProvider"
       parameters:
         - name: id
+          description: Unique identifier of the identity provider to retrieve
           in: path
           required: true
           schema:
             type: string
-            format: int64
       tags:
-        - tokens
-  /v1/users:
-    post:
-      summary: Create user
-      description: Creates a new user account
-      operationId: createUser
+        - Identity Providers
+    delete:
+      summary: Delete identity provider
+      description: Delete an identity provider configuration
+      operationId: DeleteIdentityProvider
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        default:
-          description: An unexpected error response.
+                type: object
+                properties: {}
+      parameters:
+        - name: id
+          description: Unique identifier of the identity provider to delete
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Identity Providers
+    put:
+      summary: Update identity provider
+      description: Update an existing identity provider
+      operationId: UpdateIdentityProvider
+      responses:
+        "200":
+          description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/IdentityProvider"
+      parameters:
+        - name: id
+          description: Unique identifier of the identity provider to update
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateIdentityProviderBody"
+        required: true
+      tags:
+        - Identity Providers
+  /v1/system/initialize:
+    post:
+      summary: Initialize system
+      description: Performs initial system setup including creating the first super
+        admin user. This operation can only be performed once when the system is
+        first installed.
+      operationId: InitializeSystem
+      responses:
+        "200":
+          description: System successfully initialized with super admin account created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SystemStatusResponse"
+        "400":
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema: {}
+        "409":
+          description: System is already initialized
+          content:
+            application/json:
+              schema: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SystemSetupRequest"
+        required: true
+      tags:
+        - System
+  /v1/system/license/status:
+    get:
+      summary: Get license status
+      description: Get the status of the license
+      operationId: GetLicenseStatus
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetLicenseStatusResponse"
+  /v1/system/status:
+    get:
+      summary: Get system status
+      description: Retrieves the system status
+      operationId: GetSystemStatus
+      responses:
+        "200":
+          description: System status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SystemStatusResponse"
+        "400":
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema: {}
+        "409":
+          description: System is already initialized
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - System
+  /v1/users:
+    get:
+      summary: List users
+      description: Lists all users with pagination
+      operationId: ListUsers
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListUsersResponse"
+      parameters:
+        - name: pageSize
+          description: "Maximum number of users to return per page (default: 50, max: 100)"
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: pageToken
+          description: Pagination token from previous response for fetching next page
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - Users
+    post:
+      summary: Create user
+      description: Creates a new user in the system
+      operationId: CreateUser
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateUserResponse"
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateUserRequest"
+        description: Request payload for creating a new user account
         required: true
       tags:
-        - users
-  "/v1/users/{userId}":
+        - Users
+  /v1/users/find-by-email:
+    get:
+      summary: Find user by email
+      description: Finds a user by their email address
+      operationId: FindUserByEmail
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FindUserByEmailResponse"
+      parameters:
+        - name: email
+          description: |-
+            Email address to search for
+
+            Email address
+          in: query
+          required: true
+          schema:
+            type: string
+            format: email
+      tags:
+        - Users
+  "/v1/users/{id}":
     get:
       summary: Get user
-      description: Retrieves user details
-      operationId: getUser
+      description: Retrieves user details by ID
+      operationId: GetUser
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/GetUserResponse"
       parameters:
-        - name: userId
+        - name: id
+          description: Unique identifier for the user
           in: path
           required: true
           schema:
             type: string
-            format: int64
       tags:
-        - users
+        - Users
     delete:
       summary: Delete user
-      description: Removes a user account
-      operationId: deleteUser
+      description: Deletes a user from the system
+      operationId: DeleteUser
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CustomEmpty"
-        "204":
-          description: User successfully deleted
-          content:
-            application/json:
-              schema: {}
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/DeleteUserResponse"
       parameters:
-        - name: userId
+        - name: id
+          description: Unique identifier for the user
           in: path
           required: true
           schema:
             type: string
-            format: int64
       tags:
-        - users
-  "/v1/users/{user_id}":
-    put:
+        - Users
+    patch:
       summary: Update user
-      description: Modifies user details
-      operationId: updateUser
+      description: Updates user details
+      operationId: UpdateUser
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/UpdateUserResponse"
       parameters:
-        - name: user_id
+        - name: id
+          description: Unique identifier for the user
           in: path
           required: true
           schema:
             type: string
-            format: int64
       requestBody:
         content:
           application/json:
@@ -874,53 +2150,42 @@ paths:
               $ref: "#/components/schemas/UpdateUserBody"
         required: true
       tags:
-        - users
-  /v1/verifications:
-    post:
-      summary: Create verification
-      description: Creates a new verification
-      operationId: createVerification
+        - Users
+  "/v1/users/{userId}/identities":
+    get:
+      summary: List identities
+      description: Lists all identity providers linked to a user
+      operationId: ListIdentities
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Verification"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateVerificationRequest"
-        required: true
-      tags:
-        - verifications
-  "/v1/verifications/{verification_id}/validate":
-    post:
-      summary: Validate verification
-      description: Validates an existing verification
-      operationId: validateVerification
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Verification"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/ListIdentitiesResponse"
       parameters:
-        - name: verification_id
+        - name: userId
+          description: ID of the user to list identities for
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Identity
+    post:
+      summary: Link identity
+      description: Links a new identity provider to a user
+      operationId: LinkIdentity
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Identity"
+      parameters:
+        - name: userId
+          description: ID of the user to link the identity provider to
           in: path
           required: true
           schema:
@@ -929,47 +2194,162 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ValidateVerificationBody"
+              $ref: "#/components/schemas/LinkIdentityBody"
         required: true
       tags:
-        - verifications
-  /v1/webhooks:
-    get:
-      summary: List webhooks
-      description: Retrieves all webhooks for an account
-      operationId: listWebhooks
+        - Identity
+  "/v1/users/{userId}/identities/{provider}":
+    delete:
+      summary: Unlink identity
+      description: Unlinks an identity provider from a user
+      operationId: UnlinkIdentity
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListWebhooksResult"
-        default:
-          description: An unexpected error response.
+                type: object
+                properties: {}
+      parameters:
+        - name: userId
+          description: ID of the user to unlink the identity from
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: provider
+          description: Name of the identity provider to unlink
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Identity
+  "/v1/users/{userId}/profile":
+    get:
+      summary: Get profile
+      description: Retrieves a user's profile
+      operationId: GetProfile
+      responses:
+        "200":
+          description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/Profile"
       parameters:
-        - name: per_page
-          in: query
-          required: false
+        - name: userId
+          description: ID of the user whose profile to retrieve
+          in: path
+          required: true
           schema:
-            type: integer
-            format: int32
-        - name: page
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
+            type: string
       tags:
-        - webhooks
+        - Profile
+    patch:
+      summary: Update profile
+      description: Updates a user's profile
+      operationId: UpdateProfile
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+      parameters:
+        - name: userId
+          description: ID of the user whose profile to update
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileBody"
+        required: true
+      tags:
+        - Profile
+  /v1/version:
+    get:
+      summary: Get version information
+      description: Returns version information about the system including version
+        number, git commit, build date, etc.
+      operationId: GetVersion
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VersionInfo"
+      tags:
+        - System
+  /v1/webhooks:
+    get:
+      summary: List webhooks
+      description: List webhooks with filtering and pagination
+      operationId: ListWebhooks
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListWebhooksResponse"
+      parameters:
+        - name: limit
+          description: |-
+            Maximum number of webhooks to return
+
+            Maximum number of webhooks to return
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: startingAfter
+          description: |-
+            Cursor for pagination (starting after this item)
+
+            Pagination cursor to start listing webhooks after this item
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: endingBefore
+          description: |-
+            Cursor for pagination (ending before this item)
+
+            Pagination cursor to end listing webhooks before this item
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: organizationId
+          description: |-
+            Filter by organization ID
+
+            Filter results by organization identifier
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          description: Status of the webhook
+          in: query
+          required: false
+          schema:
+            type: string
+      tags:
+        - Webhooks
     post:
       summary: Create webhook
-      description: Creates a new webhook endpoint
-      operationId: createWebhook
+      description: Create a new webhook endpoint
+      operationId: CreateWebhook
       responses:
         "200":
           description: A successful response.
@@ -977,25 +2357,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Webhook"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateWebhookRequest"
+        description: Request payload for creating a new webhook
         required: true
       tags:
-        - webhooks
-  "/v1/webhooks/{webhookId}":
+        - Webhooks
+  "/v1/webhooks/{id}":
     get:
       summary: Get webhook
-      description: Retrieves webhook details
-      operationId: getWebhook
+      description: Get details of a specific webhook
+      operationId: GetWebhook
       responses:
         "200":
           description: A successful response.
@@ -1003,57 +2378,40 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Webhook"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
       parameters:
-        - name: webhookId
+        - name: id
+          description: Unique identifier of the webhook to retrieve
           in: path
           required: true
           schema:
             type: string
-            format: int64
       tags:
-        - webhooks
+        - Webhooks
     delete:
       summary: Delete webhook
-      description: Removes a webhook
-      operationId: deleteWebhook
+      description: Delete a webhook endpoint
+      operationId: DeleteWebhook
       responses:
         "200":
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CustomEmpty"
-        "204":
-          description: Webhook successfully deleted
-          content:
-            application/json:
-              schema: {}
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
+                type: object
+                properties: {}
       parameters:
-        - name: webhookId
+        - name: id
+          description: Unique identifier of the webhook to delete
           in: path
           required: true
           schema:
             type: string
-            format: int64
       tags:
-        - webhooks
-  "/v1/webhooks/{webhook_id}":
+        - Webhooks
     put:
       summary: Update webhook
-      description: Modifies webhook configuration
-      operationId: updateWebhook
+      description: Update an existing webhook
+      operationId: UpdateWebhook
       responses:
         "200":
           description: A successful response.
@@ -1061,19 +2419,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Webhook"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
       parameters:
-        - name: webhook_id
+        - name: id
+          description: Unique identifier of the webhook to update
           in: path
           required: true
           schema:
             type: string
-            format: int64
       requestBody:
         content:
           application/json:
@@ -1081,964 +2433,2466 @@ paths:
               $ref: "#/components/schemas/UpdateWebhookBody"
         required: true
       tags:
-        - webhooks
-  "/v1/webhooks/{webhook_id}/deliveries":
-    get:
-      summary: List webhook deliveries
-      description: Retrieves delivery history for a webhook
-      operationId: listWebhookDeliveries
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ListWebhookDeliveriesResult"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: webhook_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-        - name: per_page
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: page
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-      tags:
-        - webhooks
-  "/v1/webhooks/{webhook_id}/deliveries/{delivery_id}":
-    get:
-      summary: Get webhook delivery
-      description: Gets details of a specific webhook delivery attempt
-      operationId: getWebhookDelivery
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WebhookDelivery"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: webhook_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-        - name: delivery_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      tags:
-        - webhooks
-  "/v1/webhooks/{webhook_id}/deliveries/{delivery_id}/retry":
-    post:
-      summary: Retry webhook delivery
-      description: Retries a failed webhook delivery
-      operationId: retryWebhookDelivery
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WebhookDelivery"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: webhook_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-        - name: delivery_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RetryWebhookDeliveryBody"
-        required: true
-      tags:
-        - webhooks
-  "/v1/webhooks/{webhook_id}/disable":
-    post:
-      summary: Disable webhook
-      description: Disables a webhook
-      operationId: disableWebhook
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CustomEmpty"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: webhook_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DisableWebhookBody"
-        required: true
-      tags:
-        - webhooks
-  "/v1/webhooks/{webhook_id}/enable":
-    post:
-      summary: Enable webhook
-      description: Enables a webhook
-      operationId: enableWebhook
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Webhook"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: webhook_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/EnableWebhookBody"
-        required: true
-      tags:
-        - webhooks
-  "/v1/webhooks/{webhook_id}/rotate-keys":
-    post:
-      summary: Rotate webhook keys
-      description: Rotates the signing keys for a webhook
-      operationId: rotateWebhookKeys
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Webhook"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: webhook_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RotateWebhookKeysBody"
-        required: true
-      tags:
-        - webhooks
-  "/v1/webhooks/{webhook_id}/test":
-    post:
-      summary: Test webhook
-      description: Sends a test payload to the webhook endpoint
-      operationId: testWebhook
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WebhookDelivery"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Status"
-      parameters:
-        - name: webhook_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TestWebhookBody"
-        required: true
-      tags:
-        - webhooks
+        - Webhooks
+security:
+  - ApiKeyAuth: []
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: "Authentication token in the format: Bearer <api_key>"
+      name: Authorization
+      in: header
   schemas:
-    Any:
+    AcceptInviteBody:
       type: object
       properties:
-        "@type":
+        inviteToken:
           type: string
-      additionalProperties: {}
-    Code:
+          description: Security token to validate the invitation acceptance
+      description: Request to accept an organization invitation
+      title: AcceptInviteRequest is the request for accepting an invite
+      required:
+        - inviteToken
+    AcceptInviteResponse:
       type: object
       properties:
-        format:
+        invite:
+          $ref: "#/components/schemas/OrganizationInvite"
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing the accepted invitation details
+      title: AcceptInviteResponse is the response for accepting an invite
+      required:
+        - invite
+    ActivateLicenseRequest:
+      type: object
+      properties:
+        licenseKey:
           type: string
-          title: e.g., numeric, alphanumeric
-        length:
-          type: integer
-          format: int32
-        expiration:
+          description: License key to activate.
+      required:
+        - licenseKey
+    ActivateLicenseResponse:
+      type: object
+      properties:
+        license:
+          $ref: "#/components/schemas/v1.License"
+    AddRolePermissionBody:
+      type: object
+      properties:
+        permissionId:
           type: string
-          format: int64
-          title: in seconds
-        mask:
+          description: Unique identifier for the permission to add
+          title: Permission ID to add
+          pattern: ^perm_[a-zA-Z0-9]+$
+      description: Request to assign a permission to a role
+      title: Add Role Permission Request
+      required:
+        - permissionId
+    AddRolePermissionResponse:
+      type: object
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response indicating successful permission assignment
+      title: Add Role Permission Response
+    ApiKey:
+      type: object
+      properties:
+        id:
           type: string
-          title: e.g., 3-3-3
+          description: Unique identifier for the API key
+          title: Unique identifier for the API key
+        name:
+          type: string
+          description: Human-readable name or description for the API key
+          title: Name/description of the API key
+        key:
+          type: string
+          description: The actual API key value - only returned when the key is first
+            created
+          title: The actual API key value (only returned on creation)
+        expiresAt:
+          type: string
+          format: date-time
+          description: Timestamp when the API key will expire
+          title: When the API key expires
+        lastUsed:
+          type: string
+          format: date-time
+          description: Timestamp when the API key was last used
+          title: When the API key was last used
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the API key was created
+          title: When the API key was created
+      description: Represents an API key with its associated metadata
+      title: API Key
+      required:
+        - id
+        - name
+        - key
+        - createdAt
+    Balance:
+      type: object
+      properties:
+        organizationId:
+          type: string
+          title: Organization ID
+        available:
+          $ref: "#/components/schemas/Money"
+        reserved:
+          $ref: "#/components/schemas/Money"
+        pending:
+          $ref: "#/components/schemas/Money"
+        updatedAt:
+          type: string
+          format: date-time
+          title: Last update timestamp
+      title: Balance represents an organization's balance
+      required:
+        - organizationId
+        - available
+        - reserved
+        - pending
+        - updatedAt
+    CancelMessageBody:
+      type: object
+      description: Request to cancel a scheduled message that hasn't been sent yet
+      title: Cancel Message Request
+    ConfirmMessageBody:
+      type: object
+      description: Request to confirm a scheduled message for sending
+      title: Confirm Message Request
     Connector:
       type: object
       properties:
         id:
           type: string
-          format: uint64
-          title: Unique identifier for the connector (e.g., "smpp", "kannel",
-            "messagebird")
-        platform:
-          type: string
-          title: Platform of the connector (e.g., "smpp", "kannel", "messagebird")
+          description: Unique identifier for the connector
+          title: Unique identifier for the connector
         name:
           type: string
-          title: Display name of the connector (e.g., "SMPP Connector", "Kannel Gateway")
+          description: Name of the connector
+          title: Connector name
         requirements:
-          type: array
-          items:
-            $ref: "#/components/schemas/ConnectorConfigItem"
-          title: Required fields that must be provided in Provider settings
-        enabled:
-          type: boolean
-          title: Whether the connector is enabled globally
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/ConnectorConfig"
+          description: Configuration fields for the connector
+          title: Configuration fields for the connector
         created_at:
           type: string
-          format: int64
+          format: date-time
+          description: Timestamp when the connector was created
           title: Creation timestamp
         updated_at:
           type: string
-          format: int64
+          format: date-time
+          description: Timestamp when the connector was last updated
           title: Last update timestamp
-        version:
-          type: string
-      title: Add message definitions for connector operations
+      title: Message types for Connector service
       required:
         - id
-        - platform
         - name
         - requirements
-        - enabled
-        - version
-    ConnectorConfigItem:
+        - created_at
+        - updated_at
+    ConnectorConfig:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Label or name of the configuration field
+          title: Field label/name
+        description:
+          type: string
+          description: Description of the configuration field
+          title: Field description
+        required:
+          type: boolean
+          description: Indicates if this configuration field is required
+          title: Whether the field is required
+        sensitive:
+          type: boolean
+          description: Indicates if this configuration field contains sensitive data
+          title: Whether the field contains sensitive data
+        default:
+          type: string
+          description: Default value for the configuration field
+          title: Default value for the field
+        type:
+          type: string
+          description: Type of the configuration field
+          title: Type of the field
+      required:
+        - label
+        - description
+        - required
+        - sensitive
+        - type
+    ConnectorStats:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+          description: Total number of connectors
+          title: Total number of connectors
+        active:
+          type: integer
+          format: int32
+          description: Number of active connectors
+          title: Number of active connectors
+        byType:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+          description: Number of connectors by type
+          title: Number of connectors by type
+      title: Connector statistics
+      required:
+        - total
+        - active
+        - byType
+    CreateApiKeyRequest:
       type: object
       properties:
         name:
           type: string
-          title: Name of the configuration item
-        description:
+          description: Human-readable name or description for the API key
+          title: Name/description for the API key
+        expiresAt:
           type: string
-          title: Description of what this field is for
-        optional:
-          type: boolean
-          title: Whether this field is optional
-        examples:
-          type: array
-          items:
-            type: string
-          title: Example values for this configuration item
-        sensitive:
-          type: boolean
-          title: Whether this field contains sensitive information
-        key:
+          format: date-time
+          description: Optional timestamp when the API key should expire
+          title: When the API key should expire
+      description: Request message for creating a new API key
+      title: Create API Key Request
+      required:
+        - name
+    CreateIdentityProviderRequest:
+      type: object
+      properties:
+        name:
           type: string
-          title: Configuration key identifier
+          description: Display name of the identity provider
+          title: Name of the identity provider
+        type:
+          type: string
+          description: Type of identity provider (SAML, OAuth, OIDC)
+          title: Type of identity provider
+        oidc:
+          $ref: "#/components/schemas/OIDCConfig"
+      description: Request payload for creating a new identity provider
+      required:
+        - name
+        - type
+        - oidc
     CreateMessageRequest:
       type: object
       properties:
-        body:
+        sender:
           type: string
-        to:
+          description: Unique identifier of the sender account
+          title: Identifier of the message sender
+        recipient:
           type: string
-        from:
+          description: Phone number or identifier of the message recipient
+          title: Recipient of the message
+        content:
           type: string
-        platform:
-          type: string
+          description: The actual content/body of the message to be sent
+          title: Content of the message
+        tags:
+          type: array
+          items:
+            type: string
+          description: List of tags to categorize the message
+          title: Message tags
         provider_id:
           type: string
-          format: uint64
-    CreateProviderConfigBody:
+          description: Specific provider ID to use for sending this message. If not
+            specified, the default provider will be used
+          title: Provider ID to use for sending
+        schedule_for:
+          type: string
+          format: date-time
+          description: Timestamp for when the message should be sent. If not specified,
+            the message will be sent immediately
+          title: When to schedule the message
+      description: Request payload for sending a single message
+      title: Send Message Request
+      required:
+        - sender
+        - recipient
+        - content
+    CreateNumberRequest:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Phone number in E.164 format
+          title: Phone number in E.164 format
+          pattern: ^\+[1-9]\d{1,14}$
+        organizationId:
+          type: string
+          description: Organization ID that will own this number
+          title: Organization ID that will own this number
+          pattern: ^org_[a-zA-Z0-9]+$
+      required:
+        - number
+        - organizationId
+    CreateNumberResponse:
+      type: object
+      properties:
+        number:
+          $ref: "#/components/schemas/Number"
+        error:
+          $ref: "#/components/schemas/Error"
+      required:
+        - number
+    CreateOrganizationRequest:
       type: object
       properties:
         name:
           type: string
+          title: Organization name
         description:
           type: string
-        settings:
-          type: object
-          additionalProperties:
-            type: string
-        is_active:
-          type: boolean
+          title: Organization description
+      required:
+        - name
     CreateProviderRequest:
       type: object
       properties:
         name:
           type: string
-          title: Name of the provider
-        connector_id:
+          description: Name of the provider to be created
+          title: Provider name
+        connectorId:
           type: string
-          format: uint64
+          description: Unique identifier of the connector to be used with this provider
           title: ID of the connector to use
-        platform:
-          type: string
-          title: Platform of the provider
-        configs:
+        config:
           type: object
           additionalProperties:
             type: string
-          title: Provider settings key-value pairs
-        supported_countries:
-          type: array
-          items:
-            type: string
-        default_country:
-          type: string
-    CreateTokenRequest:
+          description: Configuration key-value pairs for the provider
+          title: Provider configuration
+        pricing:
+          $ref: "#/components/schemas/PricingPolicy"
+      description: Request payload for creating a new provider
+      title: CreateProviderRequest
+      required:
+        - name
+        - connectorId
+        - config
+        - pricing
+    CreateRoleRequest:
       type: object
       properties:
         name:
           type: string
-        scopes:
-          type: array
-          items:
-            type: string
-        expires_at:
+          description: Name of the role
+          title: Name of the role
+          maxLength: 50
+          minLength: 1
+        description:
           type: string
-          format: int64
+          description: Description of the role's purpose and permissions
+          title: Description of the role
+        type:
+          type: string
+          enum:
+            - system
+            - organization
+          description: Type of role - system or organization specific
+          title: Type of the role (system or organization)
+        organizationId:
+          type: string
+          description: Organization ID if role is organization-specific
+          title: Organization ID for organization-specific roles
+          pattern: ^org_[a-zA-Z0-9]+$
+      description: Request to create a new role
+      title: Create Role Request
+      required:
+        - name
+        - description
+        - type
+    CreateRoleResponse:
+      type: object
+      properties:
+        role:
+          $ref: "#/components/schemas/Role"
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing the newly created role
+      title: Create Role Response
+      required:
+        - role
     CreateUserRequest:
       type: object
       properties:
-        username:
-          type: string
         email:
           type: string
-        password:
-          type: string
-    CreateVerificationRequest:
-      type: object
-      properties:
-        email:
-          type: string
-        phone:
-          type: string
-        platform:
-          type: string
-          title: e.g., sms, email, whatsapp
-        issuer:
-          type: string
-          title: e.g., auth, mfa
-        template:
-          type: string
-          title: Template for the message
-        template_id:
-          type: string
-          title: ID of the template
-        code:
-          $ref: "#/components/schemas/Code"
-        provider_id:
-          type: string
-          format: uint64
-      title: Define messages for Verifications operations
-    CreateWebhookRequest:
-      type: object
-      properties:
+          format: email
+          description: Email address for the new user
+          title: Email Address
         name:
           type: string
-        url:
-          type: string
-        description:
-          type: string
-        content_type:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
+          description: Full name of the new user
+          title: Full Name
+          minLength: 1
         metadata:
           type: object
           additionalProperties:
             type: string
-        headers:
+          description: Additional metadata key-value pairs for the user
+          title: Metadata
+      description: Request payload for creating a new user account
+      title: Create User Request
+      required:
+        - email
+        - name
+    CreateUserResponse:
+      type: object
+      properties:
+        object:
+          type: string
+          description: Type of the response object, always 'user'
+          title: Object Type
+        user:
+          $ref: "#/components/schemas/User"
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing the newly created user account
+      title: Create User Response
+      required:
+        - object
+        - user
+    CreateWebhookRequest:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL where webhook notifications will be sent
+          title: Webhook endpoint URL
+        events:
+          type: array
+          items:
+            type: string
+          description: List of event types this webhook will receive notifications for
+          title: Events to subscribe to
+        organizationId:
+          type: string
+          description: Organization identifier for multi-tenant setups
+          title: Organization ID (for multi-tenant setups)
+        status:
+          type: string
+          description: Status of the webhook
+      description: Request payload for creating a new webhook
+      required:
+        - url
+        - events
+    DeactivateLicenseRequest:
+      type: object
+    DeactivateLicenseResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+    DeclineInviteBody:
+      type: object
+      properties:
+        inviteToken:
+          type: string
+          description: Security token to validate the invitation decline
+      description: Request to decline an organization invitation
+      title: DeclineInviteRequest is the request for declining an invite
+      required:
+        - inviteToken
+    DeclineInviteResponse:
+      type: object
+      properties:
+        invite:
+          $ref: "#/components/schemas/OrganizationInvite"
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing the declined invitation details
+      title: DeclineInviteResponse is the response for declining an invite
+      required:
+        - invite
+    DeleteNumberResponse:
+      type: object
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+    DeleteOrganizationResponse:
+      type: object
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response for the organization deletion operation
+      title: DeleteOrganizationResponse is the response for deleting an organization
+    DeleteRoleResponse:
+      type: object
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response indicating successful role deletion
+      title: Delete Role Response
+    DeleteUserResponse:
+      type: object
+      properties:
+        object:
+          type: string
+          description: Type of the response object, always 'user'
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response indicating successful user deletion
+      title: Delete User Response
+      required:
+        - object
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+          title: Error code
+        message:
+          type: string
+          description: Human-readable error message
+          title: Error message
+        requestId:
+          type: string
+          description: Unique identifier for the request for tracking purposes
+          pattern: ^req_[a-zA-Z0-9]+$
+        metadata:
           type: object
           additionalProperties:
             type: string
-        tls:
-          type: boolean
-        tls_cert:
-          type: string
-        tls_key:
-          type: string
-        tls_ca_cert:
-          type: string
-        mtls:
-          type: boolean
-        signing_algorithm:
-          type: string
-    CustomEmpty:
-      type: object
-    DisableWebhookBody:
-      type: object
-    EnableWebhookBody:
-      type: object
-    ListConnectorsResult:
+          description: Additional error context and details
+      title: Error represents an API error
+      required:
+        - code
+        - message
+        - requestId
+    FindUserByEmailResponse:
       type: object
       properties:
-        connectors:
+        object:
+          type: string
+          description: Type of the response object, always 'user'
+        user:
+          $ref: "#/components/schemas/User"
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing the user found by email
+      title: Find User By Email Response
+      required:
+        - object
+        - user
+    FundAccountRequest:
+      type: object
+      properties:
+        paymentMethod:
+          type: string
+          enum:
+            - simo
+            - mobile_wallet
+            - bank_transfer
+          description: Payment method to use (simo, mobile_wallet, bank_transfer)
+          title: 'Payment method: "simo", "mobile_wallet", "bank_transfer"'
+        amount:
+          $ref: "#/components/schemas/Money"
+        carrier:
+          type: string
+          description: Mobile wallet carrier (required when payment_method is mobile_wallet)
+          title: Mobile wallet carrier (if using mobile_wallet)
+        phoneNumber:
+          type: string
+          description: Mobile wallet phone number (required when payment_method is
+            mobile_wallet)
+          title: Mobile wallet phone number (if using mobile_wallet)
+        bankReference:
+          type: string
+          description: Bank transfer reference (required when payment_method is
+            bank_transfer)
+          title: Bank transfer reference (if using bank_transfer)
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional metadata for the funding request
+          title: Additional metadata
+      title: FundAccountRequest is the request for FundAccount
+      required:
+        - paymentMethod
+        - amount
+    GetLicenseResponse:
+      type: object
+      properties:
+        license:
+          $ref: "#/components/schemas/v1.License"
+    GetLicenseStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the license (e.g., active, expired, invalid).
+        licenseId:
+          type: string
+          description: Unique identifier of the license (jti).
+        issuedTo:
+          type: string
+          description: Entity to whom the license was issued (sub).
+        issuer:
+          type: string
+          description: Entity that issued the license (iss).
+        issuedAt:
+          type: string
+          format: date-time
+          description: When the license was issued.
+        expiresAt:
+          type: string
+          format: date-time
+          description: When the license expires.
+        capabilities:
+          type: array
+          items:
+            type: string
+          description: List of capabilities granted by this license.
+      required:
+        - status
+        - licenseId
+        - issuedTo
+        - issuer
+        - issuedAt
+        - expiresAt
+    GetNumberResponse:
+      type: object
+      properties:
+        number:
+          $ref: "#/components/schemas/Number"
+        error:
+          $ref: "#/components/schemas/Error"
+      required:
+        - number
+    GetRoleResponse:
+      type: object
+      properties:
+        role:
+          $ref: "#/components/schemas/Role"
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing the requested role
+      title: Get Role Response
+      required:
+        - role
+    GetUserResponse:
+      type: object
+      properties:
+        object:
+          type: string
+          description: Type of the response object, always 'user'
+        user:
+          $ref: "#/components/schemas/User"
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing the requested user account details
+      title: Get User Response
+      required:
+        - object
+        - user
+    Identity:
+      type: object
+      properties:
+        provider:
+          type: string
+          example: google
+          description: Name of the identity provider (e.g., 'google', 'github')
+          title: Provider Name
+        providerUserId:
+          type: string
+          description: Unique identifier for the user in the provider's system
+          title: Provider User ID
+        email:
+          type: string
+          format: email
+          description: Email address associated with the identity provider account
+          title: Provider Email
+        profileData:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional profile information from the identity provider
+          title: Profile Data
+        linkedAt:
+          type: string
+          format: date-time
+          description: Timestamp when this identity was linked to the user
+          title: Linked At
+        lastLogin:
+          type: string
+          format: date-time
+          description: Timestamp of the most recent login using this identity provider
+          title: Last Login
+      description: Represents an external identity linked to a user account
+      title: Identity
+      required:
+        - provider
+        - providerUserId
+        - email
+        - linkedAt
+    IdentityProvider:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the identity provider
+          title: Unique identifier for the identity provider
+        name:
+          type: string
+          description: Display name of the identity provider
+          title: Name of the identity provider
+        type:
+          type: string
+          description: Type of identity provider (SAML, OAuth, OIDC)
+          title: Type of identity provider (e.g., SAML, OAuth, OIDC)
+        active:
+          type: boolean
+          description: Indicates if the identity provider is currently active
+          title: Whether the identity provider is active
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Provider-specific configuration metadata
+          title: Configuration metadata (specific to provider type)
+        oidc:
+          $ref: "#/components/schemas/OIDCConfig"
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the identity provider was created
+          title: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the identity provider was last updated
+          title: Last update timestamp
+      description: Represents an identity provider configuration
+      title: Message types for Identity Provider service
+      required:
+        - id
+        - name
+        - type
+        - active
+        - metadata
+        - oidc
+        - created_at
+        - updated_at
+    IdentityProviderStats:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+          description: Total number of identity providers
+          title: Total number of identity providers
+        active:
+          type: integer
+          format: int32
+          description: Number of active identity providers
+          title: Number of active identity providers
+        byType:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+          description: Number of identity providers by type
+          title: Number of identity providers by type
+      title: Identity provider statistics
+      required:
+        - total
+        - active
+        - byType
+    InviteUserBody:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address of the invitee
+          title: Email address of the user to invite
+        role:
+          type: string
+          enum:
+            - owner
+            - admin
+            - member
+          description: Role to assign to the user
+          title: Role to assign to the user
+      description: Request to invite a user to join an organization
+      title: InviteUserRequest is the request for inviting a user
+      required:
+        - email
+        - role
+    InviteUserResponse:
+      type: object
+      properties:
+        invite:
+          $ref: "#/components/schemas/OrganizationInvite"
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing the created organization invite details
+      title: InviteUserResponse is the response for inviting a user
+      required:
+        - invite
+    LinkIdentityBody:
+      type: object
+      properties:
+        provider:
+          type: string
+          description: Identity provider identifier (e.g., 'google', 'github', 'facebook')
+        providerUserId:
+          type: string
+          description: Unique user identifier from the identity provider's system
+        email:
+          type: string
+          format: email
+          description: Email address associated with the identity provider account
+        profileData:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional profile information provided by the identity provider
+      description: Request to link an external identity to a user account
+      title: Link Identity Request
+      required:
+        - provider
+        - providerUserId
+        - email
+    ListApiKeysResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApiKey"
+          description: List of API keys matching the request criteria
+          title: List of API keys
+        hasMore:
+          type: boolean
+          description: Indicates whether there are more API keys available beyond this
+            response
+          title: Indicates if there are more items
+      description: Response message containing a list of API keys and pagination information
+      title: List API Keys Response
+      required:
+        - data
+        - hasMore
+    ListConnectorsResponse:
+      type: object
+      properties:
+        data:
           type: array
           items:
             $ref: "#/components/schemas/Connector"
-        page:
+          description: List of connector objects matching the request criteria
+          title: List of connectors
+        has_more:
+          type: boolean
+          description: Indicates whether there are more connectors available beyond this
+            response
+          title: Indicates if there are more items
+      required:
+        - data
+        - has_more
+    ListIdentitiesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Identity"
+          description: Array of linked identity providers
+      description: Response containing a list of linked identities
+      title: List Identities Response
+      required:
+        - data
+    ListIdentityProvidersResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/IdentityProvider"
+          description: List of identity provider configurations matching the request
+            criteria
+          title: List of identity providers
+        has_more:
+          type: boolean
+          description: Indicates whether there are more identity providers available
+            beyond this response
+          title: Indicates if there are more items
+      description: Response payload containing a list of identity providers
+      required:
+        - data
+        - has_more
+    ListMessagesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+          description: Array of message objects matching the query criteria
+          title: List of messages
+        has_more:
+          type: boolean
+          description: Whether there are more messages available beyond this page
+          title: Indicates if there are more items
+      description: Response containing a paginated list of messages
+      title: List Messages Response
+      required:
+        - data
+        - has_more
+    ListNumbersResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Number"
+          description: List of phone numbers matching the request criteria
+          title: List of phone numbers
+        hasMore:
+          type: boolean
+          description: Whether there are more phone numbers available
+          title: Indicates if there are more items
+        error:
+          $ref: "#/components/schemas/Error"
+      required:
+        - data
+        - hasMore
+    ListOrganizationsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Organization"
+          title: List of organizations
+        hasMore:
+          type: boolean
+          title: Indicates if there are more items
+      required:
+        - data
+        - hasMore
+    ListPermissionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Permission"
+          description: List of permissions matching the request criteria
+          title: List of permissions
+        hasMore:
+          type: boolean
+          description: Whether there are more permissions available
+          title: Indicates if there are more items
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing a paginated list of permissions
+      title: List Permissions Response
+      required:
+        - data
+        - hasMore
+    ListProvidersResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Provider"
+          description: Array of provider objects containing provider details
+          title: List of providers
+        has_more:
+          type: boolean
+          description: Boolean flag indicating whether there are more providers available
+            for pagination
+          title: Indicates if there are more items
+      description: Response payload containing a list of providers and pagination metadata
+      title: ListProvidersResponse
+      required:
+        - data
+        - has_more
+    ListRolePermissionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Permission"
+          description: List of permissions matching the request criteria
+          title: List of permissions
+        hasMore:
+          type: boolean
+          description: Whether there are more permissions available
+          title: Indicates if there are more items
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing permissions assigned to a role
+      title: List Role Permissions Response
+      required:
+        - data
+        - hasMore
+    ListRolesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Role"
+          description: List of roles matching the request criteria
+          title: List of roles
+        hasMore:
+          type: boolean
+          description: Whether there are more roles available
+          title: Indicates if there are more items
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing a paginated list of roles
+      title: List Roles Response
+      required:
+        - data
+        - hasMore
+    ListTransactionsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transaction"
+          title: List of transactions
+        hasMore:
+          type: boolean
+          title: Indicates if there are more items
+      title: ListTransactionsResponse is the response for ListTransactions
+      required:
+        - data
+        - hasMore
+    ListUsersResponse:
+      type: object
+      properties:
+        object:
+          type: string
+          description: Type of the response object, always 'list'
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+          description: Array of user objects matching the request criteria
+        hasMore:
+          type: boolean
+          description: Indicates if more results are available in subsequent pages
+        nextPageToken:
+          type: string
+          description: Token to be used in next request to fetch the next page of results
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing a paginated list of users
+      title: List Users Response
+      required:
+        - object
+        - data
+        - hasMore
+    ListWebhooksResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Webhook"
+          description: List of webhook configurations matching the request criteria
+          title: List of webhooks
+        hasMore:
+          type: boolean
+          description: Indicates whether there are more webhooks available beyond this
+            response
+          title: Indicates if there are more items
+      description: Response payload containing a list of webhooks
+      required:
+        - data
+        - hasMore
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the message
+          title: Unique identifier for the message
+        sender:
+          type: string
+          description: Identifier of the sender account
+          title: Identifier of the message sender
+        recipient:
+          type: string
+          description: Phone number or identifier of the message recipient
+          title: Recipient of the message
+        content:
+          type: string
+          description: The actual content/body of the message
+          title: Content of the message
+        status:
+          type: string
+          description: Current status of the message (e.g., pending, sent, delivered,
+            failed)
+          title: Current status of the message
+        direction:
+          type: string
+          description: Direction of the message (inbound or outbound)
+          title: Direction of the message (inbound/outbound)
+        scheduled_at:
+          type: string
+          format: date-time
+          description: Timestamp when the message is scheduled to be sent
+          title: When the message is scheduled to be sent
+        sent_at:
+          type: string
+          format: date-time
+          description: Timestamp when the message was sent
+          title: When the message was sent
+        delivered_at:
+          type: string
+          format: date-time
+          description: Timestamp when the message was delivered
+          title: When the message was delivered
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the message was created
+          title: When the message was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the message was last updated
+          title: When the message was last updated
+        provider:
+          $ref: "#/components/schemas/Provider"
+        failed_at:
+          type: string
+          format: date-time
+          description: Timestamp when the message failed
+          title: When the message failed
+        rejected_at:
+          type: string
+          format: date-time
+          description: Timestamp when the message was rejected
+          title: When the message was rejected
+      description: Represents a message in the system with its complete lifecycle
+        information
+      title: Message
+      required:
+        - id
+        - sender
+        - recipient
+        - content
+        - status
+        - direction
+        - created_at
+        - updated_at
+        - provider
+    MessageError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code identifying the type of error
+          title: Error code
+        message:
+          type: string
+          description: Human-readable error message describing what went wrong
+          title: Error message
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp when the error occurred
+          title: When the error occurred
+        details:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional key-value pairs providing more context about the error
+          title: Additional error details
+      description: Details about an error that occurred during message processing
+      title: Message Error
+      required:
+        - code
+        - message
+        - timestamp
+    MessageStats:
+      type: object
+      properties:
+        total:
           type: integer
           format: int32
-        total_pages:
+          description: Total number of messages
+          title: Total number of messages
+        byType:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+          description: Number of messages by type
+          title: Number of messages by type
+        byStatus:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+          description: Number of messages by status
+          title: Number of messages by status
+        sentLast24h:
           type: integer
           format: int32
-        total_items:
+          description: Number of messages sent in the last 24 hours
+          title: Number of messages in the last 24 hours
+        failedLast24h:
           type: integer
           format: int32
-    ListMessagesResult:
+          description: Number of failed messages in the last 24 hours
+          title: Number of failed messages in the last 24 hours
+      title: Message statistics
+      required:
+        - total
+        - byType
+        - byStatus
+        - sentLast24h
+        - failedLast24h
+    Money:
+      type: object
+      properties:
+        amount:
+          type: string
+          description: Decimal amount
+          title: Amount in decimal format
+        currency:
+          type: string
+          description: Three-letter ISO currency code
+          title: Currency code (ISO 4217)
+      title: Money represents a monetary amount in a specific currency
+      required:
+        - amount
+        - currency
+    Number:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the phone number
+          title: 'ID format: "num_" followed by random string'
+          pattern: ^num_[a-zA-Z0-9]+$
+        number:
+          type: string
+          description: Phone number in E.164 format
+          title: Phone number in E.164 format
+          pattern: ^\+[1-9]\d{1,14}$
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+            - suspended
+          description: Phone number status
+          title: 'Status: one of ["active", "inactive", "suspended"]'
+        organizationId:
+          type: string
+          description: Organization ID that owns this number
+          title: Organization ID that owns this number
+          pattern: ^org_[a-zA-Z0-9]+$
+        createdAt:
+          type: string
+          format: date-time
+          description: When the phone number was created
+          title: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the phone number was last updated
+          title: Last update timestamp
+      title: Number represents a phone number
+      required:
+        - id
+        - number
+        - status
+        - organizationId
+        - createdAt
+        - updatedAt
+    OIDCConfig:
+      type: object
+      properties:
+        client_id:
+          type: string
+          description: Client ID for the OIDC provider
+        client_secret:
+          type: string
+          description: Client secret for the OIDC provider
+        issuer_url:
+          type: string
+          description: Issuer URL for the OIDC provider
+      description: OIDC-specific configuration
+      title: OIDC configuration
+      required:
+        - client_id
+        - client_secret
+        - issuer_url
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the organization
+          title: 'ID format: "org_" followed by random string'
+          pattern: ^org_[a-zA-Z0-9]+$
+        name:
+          type: string
+          description: Name of the organization
+          title: Organization name
+        description:
+          type: string
+          description: Optional description of the organization
+          title: Organization description
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the organization was created
+          title: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the organization was last updated
+          title: Last update timestamp
+        mode:
+          type: string
+          description: Mode of the organization
+          title: Mode of the organization (live, sandbox)
+      description: Represents an organization entity
+      title: Message types for Organization service
+      required:
+        - id
+        - name
+        - createdAt
+        - updatedAt
+        - mode
+    OrganizationInvite:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the invite
+          title: 'ID format: "inv_" followed by random string'
+          pattern: ^inv_[a-zA-Z0-9]+$
+        organizationId:
+          type: string
+          description: Unique identifier for the organization
+          title: Organization ID the invite is for
+          pattern: ^org_[a-zA-Z0-9]+$
+        email:
+          type: string
+          format: email
+          description: Email address of the invitee
+          title: Email address of the invited user
+        role:
+          type: string
+          enum:
+            - owner
+            - admin
+            - member
+          description: Role to assign to the user
+          title: 'Role: one of ["owner", "admin", "member"]'
+        status:
+          type: string
+          enum:
+            - pending
+            - accepted
+            - declined
+            - expired
+          description: Current status of the invitation
+          title: 'Status: one of ["pending", "accepted", "declined", "expired"]'
+        inviteToken:
+          type: string
+          description: Secure token for validating the invite
+          title: Token for validating the invite
+        expiresAt:
+          type: string
+          format: date-time
+          description: When the invitation expires
+          title: When the invite expires
+        createdAt:
+          type: string
+          description: Timestamp when the invite was created
+          title: Creation timestamp
+        updatedAt:
+          type: string
+          description: Timestamp when the invite was last updated
+          title: Last update timestamp
+        createdBy:
+          type: string
+          description: ID of the user who created the invite
+          title: Created by user ID
+          pattern: ^usr_[a-zA-Z0-9]+$
+        updatedBy:
+          type: string
+          description: ID of the user who last updated the invite
+          title: Last updated by user ID
+          pattern: ^usr_[a-zA-Z0-9]+$
+      description: Represents an invitation to join an organization
+      title: OrganizationInvite represents an invitation to join an organization
+      required:
+        - id
+        - organizationId
+        - email
+        - role
+        - status
+        - inviteToken
+        - expiresAt
+        - createdAt
+        - updatedAt
+        - createdBy
+        - updatedBy
+    OrganizationSettings:
+      type: object
+      properties:
+        organizationId:
+          type: string
+          description: Unique identifier of the organization
+        name:
+          type: string
+          description: Organization name
+        timezone:
+          type: string
+          description: Organization's default timezone
+        defaultLanguage:
+          type: string
+          description: Organization's default language
+        branding:
+          type: object
+          additionalProperties:
+            type: string
+          description: Organization's branding configurations
+        preferences:
+          type: object
+          additionalProperties:
+            type: string
+          description: Organization-wide preferences
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+      description: Organization-wide settings and configurations
+      title: Organization settings
+    OrganizationStats:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+          description: Total number of organizations
+          title: Total number of organizations
+        createdLast24h:
+          type: integer
+          format: int32
+          description: Number of organizations created in the last 24 hours
+          title: Number of organizations created in the last 24 hours
+        createdLast7d:
+          type: integer
+          format: int32
+          description: Number of organizations created in the last 7 days
+          title: Number of organizations created in the last 7 days
+      title: Organization statistics
+      required:
+        - total
+        - createdLast24h
+        - createdLast7d
+    Permission:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the permission
+          title: 'ID format: "perm_" followed by random string'
+          pattern: ^perm_[a-zA-Z0-9]+$
+        name:
+          type: string
+          description: Permission name in format 'resource:action'
+          title: 'Name format: "resource:action"'
+          pattern: ^[a-z]+:[a-z]+$
+        description:
+          type: string
+          description: Detailed description of what the permission allows
+          title: Description of the permission
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the permission was created
+          title: Creation timestamp (RFC3339)
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the permission was last updated
+          title: Last update timestamp (RFC3339)
+      description: Represents a permission that can be assigned to roles
+      title: Permission
+      required:
+        - id
+        - name
+        - description
+        - createdAt
+        - updatedAt
+    PricingPolicy:
+      type: object
+      properties:
+        cost:
+          type: number
+          format: double
+          description: Base cost per unit for the service
+          title: Base cost per unit
+        markup_type:
+          type: string
+          description: Type of markup to apply - either 'percentage' or 'fixed'
+          title: Can be "percentage" or "fixed"
+        markup_percent:
+          type: number
+          format: double
+          description: Percentage markup to apply when markup_type is 'percentage'
+          title: Markup percentage (if markup_type is "percentage")
+        markup_amount:
+          type: number
+          format: double
+          description: Fixed amount markup to apply when markup_type is 'fixed'
+          title: Fixed markup amount (if markup_type is "fixed")
+        currency:
+          type: string
+          description: Three-letter ISO currency code (e.g., 'USD', 'EUR')
+          title: Currency code (e.g., "USD", "EUR")
+      description: Defines the pricing structure and rules for a provider
+      title: PricingPolicy
+      required:
+        - cost
+        - markup_type
+        - currency
+    Profile:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the user this profile belongs to
+          title: Associated user ID
+        email:
+          type: string
+          format: email
+          description: User's email address
+          title: Email
+        name:
+          type: string
+          description: User's full name
+          title: Full Name
+          minLength: 1
+        phone:
+          type: string
+          description: User's contact phone number
+          title: User's phone number
+        picture:
+          type: string
+          description: URL to the user's profile picture
+          title: URL to user's profile picture
+        timezone:
+          type: string
+          example: America/New_York
+          description: User's preferred timezone
+          title: User's timezone
+        locale:
+          type: string
+          description: User's preferred locale/language setting
+          title: User's locale preference
+        customFields:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional custom profile attributes
+          title: Custom profile fields
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the profile was last updated
+          title: Last update timestamp
+      description: User profile information and preferences
+      title: Profile
+      required:
+        - userId
+        - email
+        - name
+        - updatedAt
+    Provider:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the provider
+          title: Unique identifier for the provider
+        name:
+          type: string
+          description: Name of the provider
+          title: Provider name
+        connector_id:
+          type: string
+          description: Identifier of the connector associated with this provider
+          title: ID of the connector to use
+        config:
+          type: object
+          additionalProperties:
+            type: string
+          description: Configuration parameters for the provider as key-value pairs
+          title: Provider configuration
+        pricing:
+          $ref: "#/components/schemas/PricingPolicy"
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the provider was created
+          title: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the provider was last updated
+          title: Last update timestamp
+      description: Represents a message provider with its configuration and pricing details
+      title: Provider
+      required:
+        - id
+        - name
+        - connector_id
+        - config
+        - pricing
+        - created_at
+        - updated_at
+    RemoveRolePermissionResponse:
+      type: object
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response indicating successful permission removal
+      title: Remove Role Permission Response
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the role
+          title: 'ID format: "role_" followed by random string'
+          pattern: ^role_[a-zA-Z0-9]+$
+        name:
+          type: string
+          description: Human-readable name of the role
+          title: Name of the role
+          minLength: 1
+        description:
+          type: string
+          description: Detailed description of the role's purpose
+          title: Description of the role
+        type:
+          type: string
+          enum:
+            - system
+            - organization
+          description: Type of role (system or organization)
+          title: 'Type: one of ["system", "organization"]'
+        organizationId:
+          type: string
+          description: Organization ID for organization-specific roles
+          title: Organization ID (only set for organization roles)
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the role was created
+          title: Creation timestamp (RFC3339)
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the role was last updated
+          title: Last update timestamp (RFC3339)
+      description: Represents a role in the system with its associated permissions
+      title: Role
+      required:
+        - id
+        - name
+        - description
+        - type
+        - createdAt
+        - updatedAt
+    SendBulkMessagesRequest:
+      type: object
+      properties:
+        provider_id:
+          type: string
+          description: Specific provider ID to use for sending this message. If not
+            specified, the default provider will be used
+        sender:
+          type: string
+          description: Unique identifier of the sender account
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreateMessageRequest"
+          title: List of messages to send
+      description: Request payload for sending multiple messages in a single request
+      title: Send Bulk Messages Request
+      required:
+        - provider_id
+        - sender
+        - messages
+    SendBulkMessagesResponse:
       type: object
       properties:
         messages:
           type: array
           items:
             $ref: "#/components/schemas/Message"
-        page:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_items:
-          type: integer
-          format: int32
-    ListProviderConfigsResult:
-      type: object
-      properties:
-        configs:
+          description: Array of successfully processed and sent messages
+          title: Successfully sent messages
+        errors:
           type: array
           items:
-            $ref: "#/components/schemas/ProviderConfig"
-        page:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_items:
-          type: integer
-          format: int32
-    ListProvidersResult:
+            $ref: "#/components/schemas/MessageError"
+          description: Array of errors encountered while processing messages in the bulk
+            request
+          title: Errors for failed messages
+      description: Response containing successfully sent messages and any errors encountered
+      title: Send Bulk Messages Response
+      required:
+        - messages
+    SendMessageBody:
       type: object
-      properties:
-        providers:
-          type: array
-          items:
-            $ref: "#/components/schemas/Provider"
-        page:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_items:
-          type: integer
-          format: int32
-    ListTokensResult:
-      type: object
-      properties:
-        tokens:
-          type: array
-          items:
-            $ref: "#/components/schemas/Token"
-        page:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_items:
-          type: integer
-          format: int32
-    ListWebhookDeliveriesResult:
-      type: object
-      properties:
-        deliveries:
-          type: array
-          items:
-            $ref: "#/components/schemas/WebhookDelivery"
-        page:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_items:
-          type: integer
-          format: int32
-    ListWebhooksResult:
-      type: object
-      properties:
-        webhooks:
-          type: array
-          items:
-            $ref: "#/components/schemas/Webhook"
-        page:
-          type: integer
-          format: int32
-        total_pages:
-          type: integer
-          format: int32
-        total_items:
-          type: integer
-          format: int32
-    Message:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uint64
-        platform:
-          type: string
-        account_id:
-          type: string
-          format: uint64
-        user_id:
-          type: string
-          format: uint64
-        body:
-          type: string
-        to:
-          type: string
-        from:
-          type: string
-        status:
-          type: string
-        callback_url:
-          type: string
-        created_at:
-          type: string
-          format: int64
-        updated_at:
-          type: string
-          format: int64
-        provider_id:
-          type: string
-          format: int64
-    MessageReceipt:
-      type: object
-      properties:
-        id:
-          type: string
-        message_id:
-          type: string
-        recipient:
-          type: string
-        status:
-          type: string
-        error_message:
-          type: string
-        delivered_at:
-          type: string
-          format: int64
-        created_at:
-          type: string
-          format: int64
-    PingResult:
-      type: object
-      properties:
-        reachable:
-          type: boolean
-        status:
-          type: string
-        latency_ms:
-          type: string
-          format: int64
-    Provider:
-      type: object
-      properties:
-        id:
-          type: string
-          format: int64
-        platform:
-          type: string
-        account_id:
-          type: string
-          format: int64
-        name:
-          type: string
-        host:
-          type: string
-        status:
-          type: string
-        created_at:
-          type: string
-          format: int64
-        updated_at:
-          type: string
-          format: int64
-        configs:
-          type: array
-          items:
-            $ref: "#/components/schemas/ProviderConfig"
-    ProviderConfig:
-      type: object
-      properties:
-        id:
-          type: string
-          format: int64
-        provider_id:
-          type: string
-          format: int64
-        name:
-          type: string
-        description:
-          type: string
-        settings:
-          type: object
-          additionalProperties:
-            type: string
-        is_active:
-          type: boolean
-        created_at:
-          type: string
-          format: int64
-        updated_at:
-          type: string
-          format: int64
-    RetryWebhookDeliveryBody:
-      type: object
-    RotateWebhookKeysBody:
-      type: object
-    Status:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-        details:
-          type: array
-          items:
-            $ref: "#/components/schemas/Any"
-    TestWebhookBody:
-      type: object
-      properties:
-        payload:
-          type: string
-    Token:
-      type: object
-      properties:
-        id:
-          type: string
-          format: int64
-        name:
-          type: string
-        scopes:
-          type: array
-          items:
-            type: string
-        created_at:
-          type: string
-          format: int64
-        updated_at:
-          type: string
-          format: int64
-        expires_at:
-          type: string
-          format: int64
-        last_used_at:
-          type: string
-          format: int64
-        token:
-          type: string
-    TriggerMessageBody:
-      type: object
-      properties:
-        platform:
-          type: string
-        provider_id:
-          type: string
-          format: uint64
-    UpdateProviderBody:
+      description: Request payload for sending a single message
+      title: Send Message Request
+    Settings:
       type: object
       properties:
         config:
-          $ref: "#/components/schemas/ProviderConfig"
-        tags:
-          type: array
-          items:
-            type: string
-    UpdateProviderConfigBody:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        settings:
           type: object
           additionalProperties:
             type: string
-        is_active:
-          type: boolean
-    UpdateUserBody:
+          description: Configuration key-value pairs
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+      description: General system settings and configurations
+      title: Message types for Settings service
+    SiteSettings:
       type: object
       properties:
-        email:
+        systemConfig:
+          type: object
+          additionalProperties:
+            type: string
+          description: Global system configuration parameters
+        featureFlags:
+          type: object
+          additionalProperties:
+            type: string
+          description: Feature flag configurations
+        rateLimits:
+          type: object
+          additionalProperties:
+            type: string
+          description: API rate limit configurations
+        updatedAt:
           type: string
+          format: date-time
+          description: Last update timestamp
+      description: System-wide site settings and configurations
+      title: Site settings
+    Stats:
+      type: object
+      properties:
+        identityProviders:
+          $ref: "#/components/schemas/IdentityProviderStats"
+        organizations:
+          $ref: "#/components/schemas/OrganizationStats"
+        users:
+          $ref: "#/components/schemas/UserStats"
+        webhooks:
+          $ref: "#/components/schemas/WebhookStats"
+        messages:
+          $ref: "#/components/schemas/MessageStats"
+        connectors:
+          $ref: "#/components/schemas/ConnectorStats"
+      description: System-wide statistics
+      title: System statistics
+      required:
+        - identityProviders
+        - organizations
+        - users
+        - webhooks
+        - messages
+        - connectors
+    SystemSetupRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username for the initial super admin account. Must be unique.
+          title: Initial super admin user details
+          maxLength: 50
+          minLength: 3
         password:
           type: string
-    UpdateWebhookBody:
+          description: Password for the initial super admin account. Must be at least 8
+            characters.
+          minLength: 8
+        passwordConfirm:
+          type: string
+          description: Confirmation of the initial super admin account password.
+          minLength: 8
+        email:
+          type: string
+          format: email
+          description: Email address for the initial super admin account. Must be unique.
+        firstName:
+          type: string
+          description: First name of the initial super admin user.
+          minLength: 1
+        lastName:
+          type: string
+          description: Last name of the initial super admin user.
+          minLength: 1
+      title: SystemSetupRequest represents a request to perform initial system setup
+      required:
+        - username
+        - password
+        - passwordConfirm
+        - email
+        - firstName
+        - lastName
+    SystemStatusResponse:
       type: object
       properties:
-        name:
+        initialized:
+          type: boolean
+          description: Whether the system is initialized.
+      required:
+        - initialized
+    Transaction:
+      type: object
+      properties:
+        id:
           type: string
-        url:
+          title: 'ID format: "txn_" followed by random string'
+        organizationId:
           type: string
+          title: Organization ID
+        type:
+          type: string
+          title: 'Type: one of ["payment", "refund", "adjustment", "credit", "debit",
+            "reserve", "commit", "cancel"]'
+        amount:
+          $ref: "#/components/schemas/Money"
+        status:
+          type: string
+          title: 'Status: one of ["pending", "succeeded", "failed"]'
+        referenceId:
+          type: string
+          title: Reference ID for external systems
         description:
           type: string
-        content_type:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
+          title: Transaction description
         metadata:
           type: object
           additionalProperties:
             type: string
-        headers:
+          title: Additional metadata
+        fundingSource:
+          type: string
+          title: Source of funds
+        proofOfPayment:
+          type: string
+          title: Proof of payment reference
+        confirmedAt:
+          type: string
+          format: date-time
+          title: When the transaction was confirmed
+        rejectedAt:
+          type: string
+          format: date-time
+          title: When the transaction was rejected
+        rejectionReason:
+          type: string
+          title: Reason for rejection
+        createdAt:
+          type: string
+          format: date-time
+          title: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          title: Last update timestamp
+      title: Transaction represents a billing transaction
+      required:
+        - id
+        - organizationId
+        - type
+        - amount
+        - status
+        - createdAt
+        - updatedAt
+    UpdateIdentityProviderBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: New display name of the identity provider
+          title: New identity provider name
+        type:
+          type: string
+          description: New type of identity provider (SAML, OAuth, OIDC)
+          title: Updated type of identity provider
+        active:
+          type: boolean
+          description: Set to true to activate or false to deactivate the identity provider
+          title: Updated active status
+        metadata:
           type: object
           additionalProperties:
             type: string
-        active:
-          type: boolean
-        tls_verification:
-          type: boolean
-        tls_cert:
+          description: New provider-specific configuration metadata
+          title: Updated configuration metadata
+        oidc:
+          $ref: "#/components/schemas/OIDCConfig"
+      description: Request payload for updating an existing identity provider
+    UpdateNumberBody:
+      type: object
+      properties:
+        status:
           type: string
-        tls_key:
+          enum:
+            - active
+            - inactive
+            - suspended
+          description: New phone number status
+          title: New status for the phone number
+      required:
+        - status
+    UpdateNumberResponse:
+      type: object
+      properties:
+        number:
+          $ref: "#/components/schemas/Number"
+        error:
+          $ref: "#/components/schemas/Error"
+      required:
+        - number
+    UpdateOrganizationBody:
+      type: object
+      properties:
+        name:
           type: string
-        tls_ca_cert:
+          title: New organization name
+        description:
           type: string
-        mtls_enabled:
-          type: boolean
+          title: New organization description
+    UpdateOrganizationSettingsRequest:
+      type: object
+      properties:
+        settings:
+          $ref: "#/components/schemas/OrganizationSettings"
+    UpdateProfileBody:
+      type: object
+      properties:
+        profile:
+          $ref: "#/components/schemas/Profile"
+      description: Request to update a user's profile information
+      title: Update Profile Request
+      required:
+        - profile
+    UpdateProviderBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: New name for the provider
+          title: New provider name
+        connectorId:
+          type: string
+          description: New connector ID to associate with the provider
+          title: New connector ID
+        config:
+          type: object
+          additionalProperties:
+            type: string
+          description: Updated configuration key-value pairs for the provider
+          title: Updated configuration
+        pricing:
+          $ref: "#/components/schemas/PricingPolicy"
+      description: Request payload for updating an existing provider
+      title: UpdateProviderRequest
+    UpdateRoleBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the role
+          title: New name for the role
+          maxLength: 50
+          minLength: 1
+        description:
+          type: string
+          description: Description of the role's purpose and permissions
+          title: New description for the role
+      description: Request to update an existing role
+      title: Update Role Request
+      required:
+        - name
+        - description
+    UpdateRoleResponse:
+      type: object
+      properties:
+        role:
+          $ref: "#/components/schemas/Role"
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing the updated role
+      title: Update Role Response
+      required:
+        - role
+    UpdateSettingsRequest:
+      type: object
+      properties:
+        config:
+          type: object
+          additionalProperties:
+            type: string
+          description: Configuration key-value pairs to update
+      description: Request to update general settings
+    UpdateSiteSettingsRequest:
+      type: object
+      properties:
+        settings:
+          $ref: "#/components/schemas/SiteSettings"
+    UpdateUserBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: New user name
+          title: New name for the user
+          minLength: 1
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+            - suspended
+          description: New user status
+          title: New status for the user
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          title: Updated metadata
+      description: Request payload for updating an existing user account
+      title: Update User Request
+    UpdateUserResponse:
+      type: object
+      properties:
+        object:
+          type: string
+          description: Type of the response object, always 'user'
+        user:
+          $ref: "#/components/schemas/User"
+        error:
+          $ref: "#/components/schemas/Error"
+      description: Response containing the updated user account
+      title: Update User Response
+      required:
+        - object
+        - user
+    UpdateUserSettingsRequest:
+      type: object
+      properties:
+        settings:
+          $ref: "#/components/schemas/UserSettings"
+    UpdateWebhookBody:
+      type: object
+      properties:
+        url:
+          type: string
+          description: New URL where webhook notifications will be sent
+          title: New webhook URL
+        events:
+          type: array
+          items:
+            type: string
+          description: Updated list of event types this webhook will receive notifications
+            for
+          title: Updated event subscriptions
+        status:
+          type: string
+          description: Set to 'active' to activate or 'inactive' to deactivate the webhook
+          title: Whether to activate or deactivate the webhook
+      description: Request payload for updating an existing webhook
     User:
       type: object
       properties:
         id:
           type: string
-          format: int64
-        account_id:
-          type: string
-          format: int64
-        username:
-          type: string
+          description: Unique identifier for the user
+          title: 'ID format: "usr_" followed by random string'
+          pattern: ^usr_[a-zA-Z0-9]+$
         email:
           type: string
-        role:
+          format: email
+          example: test@example.com
+          description: Email address
+          title: User's email address
+        name:
           type: string
-        created_at:
+          example: John Doe
+          description: User's full name
+          title: User's full name
+          minLength: 1
+        username:
           type: string
-          format: int64
-        updated_at:
+          example: john_doe
+          description: Username for login
+          title: Username for login
+          maxLength: 50
+          minLength: 3
+        emailVerified:
+          type: boolean
+          example: true
+          description: Indicates whether the user's email address has been verified
+          title: Whether email is verified
+        phoneVerified:
+          type: boolean
+          example: true
+          description: Indicates whether the user's phone number has been verified
+          title: Whether phone is verified
+        status:
           type: string
-          format: int64
-    ValidateVerificationBody:
+          example: active
+          enum:
+            - active
+            - inactive
+            - suspended
+          description: Current status of the user account
+          title: 'Status: one of ["active", "inactive", "suspended", "deleted"]'
+        roles:
+          type: array
+          example:
+            - role1
+            - role2
+          items:
+            type: string
+          description: List of role identifiers assigned to the user
+          title: User's assigned roles
+        permissions:
+          type: array
+          items:
+            type: string
+          description: List of individual permissions directly assigned to the user
+          title: User's direct permissions
+        metadata:
+          type: object
+          example:
+            custom_field1: value1
+            custom_field2: value2
+          additionalProperties:
+            type: string
+          description: Custom key-value pairs for storing additional user information
+          title: Additional metadata
+        object:
+          type: string
+          description: Type identifier for the object, always set to 'user'
+          title: Object type, always "user"
+        createdAt:
+          type: string
+          format: date-time
+          example: 2021-01-01T00:00:00Z
+          description: Timestamp when the user account was created
+          title: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2021-01-01T00:00:00Z
+          description: When the user was last updated
+          title: Last update timestamp
+        lastLogin:
+          type: string
+          format: date-time
+          example: 2021-01-01T00:00:00Z
+          description: When the user last logged in
+          title: Last login timestamp
+      description: A user account with associated permissions, roles, and metadata
+      title: User
+      required:
+        - id
+        - email
+        - name
+        - username
+        - emailVerified
+        - phoneVerified
+        - status
+        - roles
+        - permissions
+        - object
+        - createdAt
+        - updatedAt
+    UserSettings:
       type: object
       properties:
-        code:
+        userId:
           type: string
-    Verification:
+          description: Unique identifier of the user
+        email:
+          type: string
+          description: User's email address
+        firstName:
+          type: string
+          description: User's first name
+        lastName:
+          type: string
+          description: User's last name
+        phoneNumber:
+          type: string
+          description: User's contact phone number
+        timezone:
+          type: string
+          description: User's preferred timezone
+        language:
+          type: string
+          description: User's preferred language
+        preferences:
+          type: object
+          additionalProperties:
+            type: string
+          description: User's custom preferences key-value pairs
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+      description: User profile settings and preferences
+      title: User settings
+    UserStats:
       type: object
       properties:
-        id:
+        total:
+          type: integer
+          format: int32
+          description: Total number of users
+          title: Total number of users
+        createdLast24h:
+          type: integer
+          format: int32
+          description: Number of users created in the last 24 hours
+          title: Number of users created in the last 24 hours
+        createdLast7d:
+          type: integer
+          format: int32
+          description: Number of users created in the last 7 days
+          title: Number of users created in the last 7 days
+        activeLast24h:
+          type: integer
+          format: int32
+          description: Number of active users in the last 24 hours
+          title: Number of active users in the last 24 hours
+        activeLast7d:
+          type: integer
+          format: int32
+          description: Number of active users in the last 7 days
+          title: Number of active users in the last 7 days
+      title: User statistics
+      required:
+        - total
+        - createdLast24h
+        - createdLast7d
+        - activeLast24h
+        - activeLast7d
+    ValidateLicenseRequest:
+      type: object
+      properties:
+        licenseKey:
           type: string
-          format: uint64
-        uid:
+          description: License key to validate.
+      required:
+        - licenseKey
+    ValidateLicenseResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        message:
+          type: string
+        license:
+          $ref: "#/components/schemas/v1.License"
+    VersionInfo:
+      type: object
+      properties:
+        version:
+          type: string
+        gitCommit:
+          type: string
+        buildDate:
+          type: string
+        goVersion:
           type: string
         platform:
           type: string
-          title: e.g., phone, email, whatsapp
-        status:
-          type: string
-          title: e.g., pending, confirmed
-        created_at:
-          type: string
-          format: int64
-        updated_at:
-          type: string
-          format: int64
+      title: Version information response
+      required:
+        - version
+        - gitCommit
+        - buildDate
+        - goVersion
+        - platform
     Webhook:
       type: object
       properties:
         id:
           type: string
-          format: int64
-        account_id:
-          type: string
-          format: int64
-        name:
-          type: string
+          description: Unique identifier for the webhook
+          title: Unique identifier for the webhook
         url:
           type: string
-        description:
-          type: string
-        content_type:
-          type: string
-        tags:
+          description: URL where webhook notifications will be sent
+          title: Webhook endpoint URL
+        events:
           type: array
           items:
             type: string
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-        headers:
-          type: array
-          items:
-            $ref: "#/components/schemas/WebhookHeader"
+          description: List of event types this webhook will receive notifications for
+          title: Events to subscribe to
         active:
           type: boolean
-        tls_verification:
-          type: boolean
-        tls_cert:
+          description: Indicates if the webhook is currently active and receiving
+            notifications
+          title: Whether the webhook is active
+        organizationId:
           type: string
-        tls_key:
+          description: Organization identifier for multi-tenant setups
+          title: Organization ID (for multi-tenant setups)
+        status:
           type: string
-        tls_ca_cert:
+          description: Current operational status of the webhook
+          title: Current status of the webhook
+        signSecret:
           type: string
-        mtls_enabled:
-          type: boolean
-        created_at:
+          description: Secret key used for signing webhook payloads
+          title: Secret for signing webhook payloads
+        createdAt:
           type: string
-          format: int64
-        updated_at:
+          format: date-time
+          description: Timestamp when the webhook was created
+          title: Creation timestamp
+        updatedAt:
           type: string
-          format: int64
-        signing_algorithm:
-          type: string
-      title: Add message definitions for webhook operations
-    WebhookDelivery:
+          format: date-time
+          description: Timestamp when the webhook was last updated
+          title: Last update timestamp
+      description: Represents a webhook configuration for receiving event notifications
+      title: Message types for Webhook service
+      required:
+        - id
+        - url
+        - events
+        - active
+        - status
+        - signSecret
+        - createdAt
+        - updatedAt
+    WebhookStats:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+          description: Total number of webhooks
+          title: Total number of webhooks
+        active:
+          type: integer
+          format: int32
+          description: Number of active webhooks
+          title: Number of active webhooks
+        byEvent:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+          description: Number of webhooks by event type
+          title: Number of webhooks by event type
+        deliveriesLast24h:
+          type: integer
+          format: int32
+          description: Number of webhook deliveries in the last 24 hours
+          title: Number of webhook deliveries in the last 24 hours
+        failedDeliveriesLast24h:
+          type: integer
+          format: int32
+          description: Number of failed webhook deliveries in the last 24 hours
+          title: Number of failed webhook deliveries in the last 24 hours
+      title: Webhook statistics
+      required:
+        - total
+        - active
+        - byEvent
+        - deliveriesLast24h
+        - failedDeliveriesLast24h
+    v1.License:
       type: object
       properties:
         id:
           type: string
-          format: int64
-        webhook_id:
-          type: string
-          format: int64
-        event_id:
-          type: string
-          format: int64
-        account_id:
-          type: string
-          format: int64
-        event_type:
-          type: string
+          description: Unique identifier of the license (jti).
         status:
-          type: integer
-          format: int32
-        request_body:
           type: string
-        response_body:
+          description: Status of the license (e.g., active, expired, invalid).
+        issuedTo:
           type: string
-        response_code:
-          type: integer
-          format: int32
-        error:
+          description: Entity to whom the license was issued (sub).
+        issuer:
           type: string
-        duration:
+          description: Entity that issued the license (iss).
+        issuedAt:
           type: string
-          format: int64
-        next_retry_time:
+          format: date-time
+          description: When the license was issued.
+        expiresAt:
           type: string
-          format: int64
-        retry_count:
-          type: integer
-          format: int32
-        created_at:
-          type: string
-          format: int64
-        updated_at:
-          type: string
-          format: int64
-    WebhookHeader:
-      type: object
-      properties:
-        key:
-          type: string
-        value:
-          type: string
+          format: date-time
+          description: When the license expires.
+        capabilities:
+          type: array
+          items:
+            type: string
+          description: List of capabilities granted by this license.
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional metadata associated with the license.
+      title: License information
+      required:
+        - id
+        - status
+        - issuedTo
+        - issuer
+        - issuedAt
+        - expiresAt
