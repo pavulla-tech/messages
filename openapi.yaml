@@ -2468,16 +2468,19 @@ components:
     ActivateLicenseRequest:
       type: object
       properties:
-        licenseKey:
+        license_key:
           type: string
           description: License key to activate.
       required:
-        - licenseKey
+        - license_key
     ActivateLicenseResponse:
       type: object
       properties:
-        license:
-          $ref: "#/components/schemas/v1.License"
+        license_key:
+          type: string
+          description: License key to activate.
+      required:
+        - license_key
     AddRolePermissionBody:
       type: object
       properties:
@@ -2528,6 +2531,9 @@ components:
           format: date-time
           description: Timestamp when the API key was created
           title: When the API key was created
+        mode:
+          type: string
+          description: Mode of the API key
       description: Represents an API key with its associated metadata
       title: API Key
       required:
@@ -2535,6 +2541,7 @@ components:
         - name
         - key
         - createdAt
+        - mode
     Balance:
       type: object
       properties:
@@ -2665,15 +2672,19 @@ components:
           type: string
           description: Human-readable name or description for the API key
           title: Name/description for the API key
-        expiresAt:
+        expires_at:
           type: string
           format: date-time
           description: Optional timestamp when the API key should expire
           title: When the API key should expire
+        mode:
+          type: string
+          description: Mode of the API key
       description: Request message for creating a new API key
       title: Create API Key Request
       required:
         - name
+        - mode
     CreateIdentityProviderRequest:
       type: object
       properties:
@@ -2724,6 +2735,10 @@ components:
           description: Timestamp for when the message should be sent. If not specified,
             the message will be sent immediately
           title: When to schedule the message
+        mode:
+          type: string
+          description: Mode to use for sending the message. If not specified, the default
+            mode will be used
       description: Request payload for sending a single message
       title: Send Message Request
       required:
@@ -4153,6 +4168,10 @@ components:
           items:
             $ref: "#/components/schemas/CreateMessageRequest"
           title: List of messages to send
+        mode:
+          type: string
+          description: Mode to use for sending the message. If not specified, the default
+            mode will be used
       description: Request payload for sending multiple messages in a single request
       title: Send Bulk Messages Request
       required:
@@ -4729,11 +4748,11 @@ components:
     ValidateLicenseRequest:
       type: object
       properties:
-        licenseKey:
+        license_key:
           type: string
           description: License key to validate.
       required:
-        - licenseKey
+        - license_key
     ValidateLicenseResponse:
       type: object
       properties:
